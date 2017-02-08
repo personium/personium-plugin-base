@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 /**
  * ログメッセージ作成クラス.
  */
-public final class PluginLog {
+public final class PluginBaseLog {
 
-    static Logger log = LoggerFactory.getLogger(PluginLog.class);
+    static Logger log = LoggerFactory.getLogger(PluginBaseLog.class);
 
     /**
      * OData関連.
@@ -38,15 +38,15 @@ public final class PluginLog {
          * 主キーでの検索で1件のみ取得できるはずの場所で2件以上のデータが返ってきた.
          * {0}：ヒット件数
          */
-        public static final PluginLog FOUND_MULTIPLE_RECORDS = create("PL-OD-0001");
+        public static final PluginBaseLog FOUND_MULTIPLE_RECORDS = create("PL-OD-0001");
         /**
          * バルクデータ登録で異常.
          */
-        public static final PluginLog BULK_INSERT_FAIL = create("PL-OD-0002");
+        public static final PluginBaseLog BULK_INSERT_FAIL = create("PL-OD-0002");
         /**
          * プロパティ名の重複を検出した.
          */
-        public static final PluginLog DUPLICATED_PROPERTY_NAME = create("PL-OD-0003");
+        public static final PluginBaseLog DUPLICATED_PROPERTY_NAME = create("PL-OD-0003");
     }
 
     /**
@@ -57,21 +57,21 @@ public final class PluginLog {
          * Roleが見つからなかったとき.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog ROLE_NOT_FOUND = create("PL-DV-0001");
+        public static final PluginBaseLog ROLE_NOT_FOUND = create("PL-DV-0001");
         /**
          * Rangeヘッダ指定誤り.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog REQUESTED_RANGE_NOT_SATISFIABLE = create("PL-DV-0002");
+        public static final PluginBaseLog REQUESTED_RANGE_NOT_SATISFIABLE = create("PL-DV-0002");
         /**
          * Rangeヘッダ指定のファイル読み飛ばし失敗.
          */
-        public static final PluginLog FILE_TOO_SHORT = create("PL-DV-0003");
+        public static final PluginBaseLog FILE_TOO_SHORT = create("PL-DV-0003");
         /**
          * バイナリデータの削除に失敗.
          * {0}:バイナリデータのUUID
          */
-        public static final PluginLog FILE_DELETE_FAIL = create("PL-DV-0004");
+        public static final PluginBaseLog FILE_DELETE_FAIL = create("PL-DV-0004");
     }
 
     /**
@@ -82,27 +82,27 @@ public final class PluginLog {
          * トークンのパースに失敗した時.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog TOKEN_PARSE_ERROR = create("PL-AU-0001");
+        public static final PluginBaseLog TOKEN_PARSE_ERROR = create("PL-AU-0001");
         /**
          * トークンの署名検証エラー.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog TOKEN_DISG_ERROR = create("PL-AU-0002");
+        public static final PluginBaseLog TOKEN_DISG_ERROR = create("PL-AU-0002");
         /**
          * ルートCA証明書設定エラー.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog ROOT_CA_CRT_SETTING_ERROR = create("PL-AU-0003");
+        public static final PluginBaseLog ROOT_CA_CRT_SETTING_ERROR = create("PL-AU-0003");
         /**
          * 最終ログイン時刻の更新時にAccountが存在しない場合.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog ACCOUNT_ALREADY_DELETED = create("PL-AU-0004");
+        public static final PluginBaseLog ACCOUNT_ALREADY_DELETED = create("PL-AU-0004");
         /**
          * 対応するアカウントが存在したが、指定されたGrantTypeに対応していない.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog UNSUPPORTED_ACCOUNT_GRANT_TYPE = create("PL-AU-0005");
+        public static final PluginBaseLog UNSUPPORTED_ACCOUNT_GRANT_TYPE = create("PL-AU-0005");
     }
 
     /**
@@ -113,22 +113,22 @@ public final class PluginLog {
          * 対応するアカウントが存在しない.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog NO_SUCH_ACCOUNT = create("PL-OI-0001");
+        public static final PluginBaseLog NO_SUCH_ACCOUNT = create("PL-OI-0001");
         /**
          * 対応するアカウントが存在したが、指定されたGrantTypeに対応していない.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog UNSUPPORTED_ACCOUNT_GRANT_TYPE = create("PL-OI-0002");
+        public static final PluginBaseLog UNSUPPORTED_ACCOUNT_GRANT_TYPE = create("PL-OI-0002");
         /**
          * リクエストユーザーとIDTokenのユーザーが一致しない.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog INVALID_ACCOUNT = create("PL-OI-0003");
+        public static final PluginBaseLog INVALID_ACCOUNT = create("PL-OI-0003");
         /** .
          * IssuerがGoogleではない
          * {0}：詳細メッセージ
          */
-        public static final PluginLog INVALID_ISSUER = create("PL-OI-0004");
+        public static final PluginBaseLog INVALID_ISSUER = create("PL-OI-0004");
     }
 
     /**
@@ -140,88 +140,88 @@ public final class PluginLog {
          * Adsへマスタデータ作成に失敗.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog DATA_STORE_ENTITY_CREATE_FAIL = create("PL-SV-0001");
+        public static final PluginBaseLog DATA_STORE_ENTITY_CREATE_FAIL = create("PL-SV-0001");
         /**
          * Adsへマスタデータ更新に失敗.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog DATA_STORE_ENTITY_UPDATE_FAIL = create("PL-SV-0002");
+        public static final PluginBaseLog DATA_STORE_ENTITY_UPDATE_FAIL = create("PL-SV-0002");
         /**
          * Adsへマスタデータ削除に失敗.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog DATA_STORE_ENTITY_DELETE_FAIL = create("PL-SV-0003");
+        public static final PluginBaseLog DATA_STORE_ENTITY_DELETE_FAIL = create("PL-SV-0003");
         /**
          * memcachedのポート番号フォーマットエラー.
          * {0}：詳細メッセージ
          */
-        public static final PluginLog MEMCACHED_PORT_FORMAT_ERROR = create("PL-SV-0004");
+        public static final PluginBaseLog MEMCACHED_PORT_FORMAT_ERROR = create("PL-SV-0004");
         /**
          * memcachedへの接続に失敗.
          * {0}:ホスト名
          * {1}:ポート名
          * {2}:詳細メッセージ
          */
-        public static final PluginLog MEMCACHED_CONNECTO_FAIL = create("PL-SV-0005");
+        public static final PluginBaseLog MEMCACHED_CONNECTO_FAIL = create("PL-SV-0005");
         /**
          * memcachedへのcache設定失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog MEMCACHED_SET_FAIL = create("PL-SV-0006");
+        public static final PluginBaseLog MEMCACHED_SET_FAIL = create("PL-SV-0006");
         /**
          * memcachedへのcacheクリアー失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog MEMCACHED_CLEAR_FAIL = create("PL-SV-0007");
+        public static final PluginBaseLog MEMCACHED_CLEAR_FAIL = create("PL-SV-0007");
         /**
          * memcachedへのcache削除失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog MEMCACHED_DELETE_FAIL = create("PL-SV-0008");
+        public static final PluginBaseLog MEMCACHED_DELETE_FAIL = create("PL-SV-0008");
         /**
          * AdsへBulkでのマスタデータ作成に失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog DATA_STORE_ENTITY_BULK_CREATE_FAIL = create("PL-SV-0009");
+        public static final PluginBaseLog DATA_STORE_ENTITY_BULK_CREATE_FAIL = create("PL-SV-0009");
         /**
          * RDBへの接続失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog RDB_CONNECT_FAIL = create("PL-SV-0010");
+        public static final PluginBaseLog RDB_CONNECT_FAIL = create("PL-SV-0010");
         /**
          * SQL実行エラー.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog EXECUTE_QUERY_SQL_FAIL = create("PL-SV-0011");
+        public static final PluginBaseLog EXECUTE_QUERY_SQL_FAIL = create("PL-SV-0011");
         /**
          * RDBとの切断失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog RDB_DISCONNECT_FAIL = create("PL-SV-0012");
+        public static final PluginBaseLog RDB_DISCONNECT_FAIL = create("PL-SV-0012");
         /**
          * ADSへの接続失敗.
          * {0}:詳細メッセージ
          */
-        public static final PluginLog ADS_CONNECTION_ERROR = create("PL-SV-0013");
+        public static final PluginBaseLog ADS_CONNECTION_ERROR = create("PL-SV-0013");
         /**
          * ElasticSearchのインデックスが存在しない.
          * {0}:インデックス名
          */
-        public static final PluginLog ES_INDEX_NOT_EXIST = create("PL-SV-0014");
+        public static final PluginBaseLog ES_INDEX_NOT_EXIST = create("PL-SV-0014");
         /**
          * Adsの作成に失敗.
          * {0}:インデックス名
          */
-        public static final PluginLog FAILED_TO_CREATE_ADS = create("PL-SV-0015");
+        public static final PluginBaseLog FAILED_TO_CREATE_ADS = create("PL-SV-0015");
         /**
          * JDBCに対して実行するSQL文をログに出力.
          * {0}:実行したSQL文
          */
-        public static final PluginLog JDBC_EXEC_SQL = create("PL-SV-0016");
+        public static final PluginBaseLog JDBC_EXEC_SQL = create("PL-SV-0016");
         /**
          * サーバ起動失敗.
          */
-        public static final PluginLog FAILED_TO_START_SERVER = create("PL-SV-0017");
+        public static final PluginBaseLog FAILED_TO_START_SERVER = create("PL-SV-0017");
         /**
          * JDBCに対して実行するユーザODataのSQL実行をログに出力.
          * {0}:DB名
@@ -233,21 +233,21 @@ public final class PluginLog {
          * {6}:Nodeのid
          * {7}:EntityTypeのid
          */
-        public static final PluginLog JDBC_USER_ODATA_SQL = create("PL-SV-0018");
+        public static final PluginBaseLog JDBC_USER_ODATA_SQL = create("PL-SV-0018");
         /**
          * ReferenceOnlyロックを設定した.
          * {0}:キー名
          */
-        public static final PluginLog SET_REFERENCE_ONLY_LOCK = create("PL-SV-0019");
+        public static final PluginBaseLog SET_REFERENCE_ONLY_LOCK = create("PL-SV-0019");
         /**
          * Adsエラー時のリペア用ログの書込みに失敗.
          */
-        public static final PluginLog WRITE_ADS_FAILURE_LOG_ERROR = create("PL-SV-0020");
+        public static final PluginBaseLog WRITE_ADS_FAILURE_LOG_ERROR = create("PL-SV-0020");
         /**
          * Adsエラー時のリペア用ログに書込む情報.
          * {0}:ログ情報
          */
-        public static final PluginLog WRITE_ADS_FAILURE_LOG_INFO = create("PL-SV-0021");
+        public static final PluginBaseLog WRITE_ADS_FAILURE_LOG_INFO = create("PL-SV-0021");
     }
 
     /**
@@ -258,7 +258,7 @@ public final class PluginLog {
          * ESへの接続が完了した.
          * {0}:接続ノードアドレス
          */
-        public static final PluginLog CONNECTED = create("PL-ES-0001");
+        public static final PluginBaseLog CONNECTED = create("PL-ES-0001");
         /**
          * ESへのリクエストが完了した.
          * {0}:インデックス名
@@ -268,12 +268,12 @@ public final class PluginLog {
          * {4}:ESへのリクエストタイプ
          * {3}と{4}の出力順は逆になる
          */
-        public static final PluginLog AFTER_REQUEST = create("PL-ES-0002");
+        public static final PluginBaseLog AFTER_REQUEST = create("PL-ES-0002");
         /**
          * インデックスを作成.
          * {0}:インデックス名
          */
-        public static final PluginLog CREATING_INDEX = create("PL-ES-0003");
+        public static final PluginBaseLog CREATING_INDEX = create("PL-ES-0003");
         /**
          * ESへの登録リクエストが完了した.
          * {0}:インデックス名
@@ -282,12 +282,12 @@ public final class PluginLog {
          * {3}:ESへのリクエストタイプ
          * {4}:リクエストクエリ
          */
-        public static final PluginLog AFTER_CREATE = create("PL-ES-0004");
+        public static final PluginBaseLog AFTER_CREATE = create("PL-ES-0004");
         /**
          * ESへの登録リクエストが完了した.
          * {0}:リクエストクエリ
          */
-        public static final PluginLog AFTER_CREATE_BODY = create("PL-ES-0005");
+        public static final PluginBaseLog AFTER_CREATE_BODY = create("PL-ES-0005");
     }
 
     /**
@@ -297,7 +297,7 @@ public final class PluginLog {
         /**
          * 到達し得ないソース等の原因不明のエラー.
          */
-        public static final PluginLog UNREACHABLE_CODE_ERROR = create("PL-MC-0001");
+        public static final PluginBaseLog UNREACHABLE_CODE_ERROR = create("PL-MC-0001");
     }
 
     String message;
@@ -321,7 +321,7 @@ public final class PluginLog {
      * @param severityエラーレベル
      * @param message エラーメッセージ
      */
-    PluginLog(final String code,
+    PluginBaseLog(final String code,
             final Severity severity,
             final String message) {
         this.code = code;
@@ -332,9 +332,9 @@ public final class PluginLog {
     /**
      * ファクトリーメソッド.
      * @param code エラーコード
-     * @return PluginLog
+     * @return PluginBaseLog
      */
-    public static PluginLog create(String code) {
+    public static PluginBaseLog create(String code) {
         // ログレベルの取得
         Severity severity = PluginMessageUtils.getSeverity(code);
         if (severity == null) {
@@ -345,7 +345,7 @@ public final class PluginLog {
         // ログメッセージの取得
         String message = PluginMessageUtils.getMessage(code);
 
-        return new PluginLog(code, severity, message);
+        return new PluginBaseLog(code, severity, message);
     }
 
     /**
@@ -359,24 +359,24 @@ public final class PluginLog {
     /**
      * メッセージをパラメタ置換したものを作成して返します. エラーメッセージ上の {1} {2} 等の表現がパラメタ置換用キーワードです。
      * @param params 付加メッセージ
-     * @return PluginLog
+     * @return PluginBaseLog
      */
-    public PluginLog params(final Object... params) {
+    public PluginBaseLog params(final Object... params) {
         // 置換メッセージ作成
         String ms = MessageFormat.format(this.message, params);
         // メッセージ置換クローンを作成
-        PluginLog ret = new PluginLog(this.code, this.severity, ms);
+        PluginBaseLog ret = new PluginBaseLog(this.code, this.severity, ms);
         return ret;
     }
 
     /**
      * 原因例外を追加したものを作成して返します.
      * @param t 原因例外
-     * @return PluginException
+     * @return PluginBaseException
      */
-    public PluginLog reason(final Throwable t) {
+    public PluginBaseLog reason(final Throwable t) {
         // クローンを作成して
-        PluginLog ret = new PluginLog(this.code, this.severity, this.message);
+        PluginBaseLog ret = new PluginBaseLog(this.code, this.severity, this.message);
         // 原因のExceptionをセット
         ret.reason = t;
         return ret;
@@ -386,7 +386,7 @@ public final class PluginLog {
      * ログの出力.
      * ログの出力時にログ出力元のクラス名、メソッド名、行数を表示する。
      * 出力例）
-     * 2012-09-09 11:23:47.029 [main] [INFO ] PluginLog [io.personium.core.PersoniumCoreLogTest#test:22] - JSON Parse Error.
+     * 2012-09-09 11:23:47.029 [main] [INFO ] PluginBaseLog [io.personium.core.PersoniumCoreLogTest#test:22] - JSON Parse Error.
      */
     public void writeLog() {
 

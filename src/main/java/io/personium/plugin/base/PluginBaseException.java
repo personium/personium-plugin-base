@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.apache.http.HttpStatus;
  * ログメッセージ作成クラス.
  */
 @SuppressWarnings("serial")
-public class PluginException extends RuntimeException {
+public class PluginBaseException extends RuntimeException {
 
     /**
      * OData関連.
@@ -43,302 +43,302 @@ public class PluginException extends RuntimeException {
         /**
          * JSONのパースに失敗したとき.
          */
-        public static final PluginException JSON_PARSE_ERROR = create("PR400-OD-0001");
+        public static final PluginBaseException JSON_PARSE_ERROR = create("PR400-OD-0001");
         /**
          * クエリのパースに失敗.
          */
-        public static final PluginException QUERY_PARSE_ERROR = create("PR400-OD-0002");
+        public static final PluginBaseException QUERY_PARSE_ERROR = create("PR400-OD-0002");
         /**
          * $fileterのパースに失敗.
          */
-        public static final PluginException FILTER_PARSE_ERROR = create("PR400-OD-0003");
+        public static final PluginBaseException FILTER_PARSE_ERROR = create("PR400-OD-0003");
         /**
          * EntityKeyのパースに失敗.
          */
-        public static final PluginException ENTITY_KEY_PARSE_ERROR = create("PR400-OD-0004");
+        public static final PluginBaseException ENTITY_KEY_PARSE_ERROR = create("PR400-OD-0004");
 
         /**
          * $formatに指定された値が不正.
          */
-        public static final PluginException FORMAT_INVALID_ERROR = create("PR400-OD-0005");
+        public static final PluginBaseException FORMAT_INVALID_ERROR = create("PR400-OD-0005");
         /**
          * リクエストデータのフォーマットが不正.
          * {0}プロパティ名
          */
-        public static final PluginException REQUEST_FIELD_FORMAT_ERROR = create("PR400-OD-0006");
+        public static final PluginBaseException REQUEST_FIELD_FORMAT_ERROR = create("PR400-OD-0006");
         /**
          * リクエストボディのフィールド名が不正.
          * {0}:詳細メッセージ
          * 管理情報を更新しようとした時と、スキーマに存在しない値を設定しようとした時に発生
          * 注）このエラーはメッセージをソースで管理することになるため、今後はこれを使わないこと。
          */
-        public static final PluginException FIELED_INVALID_ERROR = create("PR400-OD-0007");
+        public static final PluginBaseException FIELED_INVALID_ERROR = create("PR400-OD-0007");
         /**
          * 該当Associationが存在しない.
          */
-        public static final PluginException NO_SUCH_ASSOCIATION = create("PR400-OD-0008");
+        public static final PluginBaseException NO_SUCH_ASSOCIATION = create("PR400-OD-0008");
         /**
          * リクエストボディの必須項目が無い.
          * {0}:プロパティ名
          */
-        public static final PluginException INPUT_REQUIRED_FIELD_MISSING = create("PR400-OD-0009");
+        public static final PluginBaseException INPUT_REQUIRED_FIELD_MISSING = create("PR400-OD-0009");
         /**
          * リクエストボディの必須項目が無い.
          */
-        public static final PluginException KEY_FOR_NAVPROP_SHOULD_NOT_BE_SPECIFIED = create("PR400-OD-0010");
+        public static final PluginBaseException KEY_FOR_NAVPROP_SHOULD_NOT_BE_SPECIFIED = create("PR400-OD-0010");
         /**
          * リクエストURLのKey指定が無い.
          */
-        public static final PluginException KEY_FOR_NAVPROP_SHOULD_BE_SPECIFIED = create("PR400-OD-0011");
+        public static final PluginBaseException KEY_FOR_NAVPROP_SHOULD_BE_SPECIFIED = create("PR400-OD-0011");
         /**
          * 文字種が不正.
          * {0}:プロパティ名
          */
-        public static final PluginException INVALID_TYPE_ERROR = create("PR400-OD-0012");
+        public static final PluginBaseException INVALID_TYPE_ERROR = create("PR400-OD-0012");
         /**
          * $inlinecountに指定された値が不正.
          * {0}:inlinecountで指定された値
          */
-        public static final PluginException INLINECOUNT_PARSE_ERROR = create("PR400-OD-0013");
+        public static final PluginBaseException INLINECOUNT_PARSE_ERROR = create("PR400-OD-0013");
         /**
          * 指定されたプロパティが存在しない.
          */
-        public static final PluginException UNKNOWN_PROPERTY_APPOINTED = create("PR400-OD-0014");
+        public static final PluginBaseException UNKNOWN_PROPERTY_APPOINTED = create("PR400-OD-0014");
         /**
          * $orderbyのパースに失敗.
          */
-        public static final PluginException ORDERBY_PARSE_ERROR = create("PR400-OD-0015");
+        public static final PluginBaseException ORDERBY_PARSE_ERROR = create("PR400-OD-0015");
         /**
          * 単一Keyにnullが指定された.
          */
-        public static final PluginException NULL_SINGLE_KEY = create("PR400-OD-0016");
+        public static final PluginBaseException NULL_SINGLE_KEY = create("PR400-OD-0016");
         /**
          * $selectのパースに失敗.
          */
-        public static final PluginException SELECT_PARSE_ERROR = create("PR400-OD-0017");
+        public static final PluginBaseException SELECT_PARSE_ERROR = create("PR400-OD-0017");
         /**
          * AssociationEndの更新がリクエストされた.
          */
-        public static final PluginException NOT_PUT_ASSOCIATIONEND = create("PR400-OD-0019");
+        public static final PluginBaseException NOT_PUT_ASSOCIATIONEND = create("PR400-OD-0019");
         /**
          * 登録するデータの型がelasticsearchに登録済みのデータ型と異なる.
          */
-        public static final PluginException SCHEMA_MISMATCH = create("PR400-OD-0020");
+        public static final PluginBaseException SCHEMA_MISMATCH = create("PR400-OD-0020");
         /**
          * $batchのボディのFormatが不正.
          * ヘッダの指定誤り
          * {0}:ヘッダ名
          */
-        public static final PluginException BATCH_BODY_FORMAT_HEADER_ERROR = create("PR400-OD-0021");
+        public static final PluginBaseException BATCH_BODY_FORMAT_HEADER_ERROR = create("PR400-OD-0021");
         /**
          * $batchのボディのFormatが不正.
          * changesetのネストが指定されていた場合
          */
-        public static final PluginException BATCH_BODY_FORMAT_CHANGESET_NEST_ERROR = create("PR400-OD-0022");
+        public static final PluginBaseException BATCH_BODY_FORMAT_CHANGESET_NEST_ERROR = create("PR400-OD-0022");
         /**
          * $batchのボディのパースに失敗した場合.
          */
-        public static final PluginException BATCH_BODY_PARSE_ERROR = create("PR400-OD-0023");
+        public static final PluginBaseException BATCH_BODY_PARSE_ERROR = create("PR400-OD-0023");
         /**
          * 更新リクエストでボディのNTKPに指定されたリソースが存在しない場合.
          * {0}：NTKPで指定された値
          */
-        public static final PluginException BODY_NTKP_NOT_FOUND_ERROR = create("PR400-OD-0024");
+        public static final PluginBaseException BODY_NTKP_NOT_FOUND_ERROR = create("PR400-OD-0024");
         /**
          * $expandで指定されたNTKPがリソースとして存在しない場合.
          * {0}：$expandで指定された値
          */
-        public static final PluginException EXPAND_NTKP_NOT_FOUND_ERROR = create("PR400-OD-0025");
+        public static final PluginBaseException EXPAND_NTKP_NOT_FOUND_ERROR = create("PR400-OD-0025");
         /**
          * $expandのパースに失敗.
          */
-        public static final PluginException EXPAND_PARSE_ERROR = create("PR400-OD-0026");
+        public static final PluginBaseException EXPAND_PARSE_ERROR = create("PR400-OD-0026");
         /**
          * すでに別のスキーマ型のIndexが作成されている場合.
          */
-        public static final PluginException ANOTHRE_SCHEMA_TYPE_ALREADY_EXISTS = create("PR400-OD-0027");
+        public static final PluginBaseException ANOTHRE_SCHEMA_TYPE_ALREADY_EXISTS = create("PR400-OD-0027");
         /**
          * $linksのEntityKeyのパースに失敗.
          */
-        public static final PluginException ENTITY_KEY_LINKS_PARSE_ERROR = create("PR400-OD-0028");
+        public static final PluginBaseException ENTITY_KEY_LINKS_PARSE_ERROR = create("PR400-OD-0028");
         /**
          * クエリに指定された値が不正.
          */
-        public static final PluginException QUERY_INVALID_ERROR = create("PR400-OD-0029");
+        public static final PluginBaseException QUERY_INVALID_ERROR = create("PR400-OD-0029");
         /**
          * $Batchで指定されたリクエスト数が不正.
          */
-        public static final PluginException TOO_MANY_REQUESTS = create("PR400-OD-0030");
+        public static final PluginBaseException TOO_MANY_REQUESTS = create("PR400-OD-0030");
         /**
          * $links登録で1:1を指定.
          */
-        public static final PluginException INVALID_MULTIPLICITY = create("PR400-OD-0031");
+        public static final PluginBaseException INVALID_MULTIPLICITY = create("PR400-OD-0031");
 
         /**
          * EnitityTypeの階層数、内包プロパティ数の制限を超えた.
          */
-        public static final PluginException ENTITYTYPE_STRUCTUAL_LIMITATION_EXCEEDED = create("PR400-OD-0032");
+        public static final PluginBaseException ENTITYTYPE_STRUCTUAL_LIMITATION_EXCEEDED = create("PR400-OD-0032");
 
         /**
          * EnitityType数の制限を超えた.
          */
-        public static final PluginException ENTITYTYPE_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0033");
+        public static final PluginBaseException ENTITYTYPE_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0033");
 
         /**
          * $batchのボディのFormatが不正.
          * リクエストパスの指定誤り
          * {0}:リクエストパス
          */
-        public static final PluginException BATCH_BODY_FORMAT_PATH_ERROR = create("PR400-OD-0034");
+        public static final PluginBaseException BATCH_BODY_FORMAT_PATH_ERROR = create("PR400-OD-0034");
 
         /**
          * $batchのボディのFormatが不正.
          * $batchで受付できないメソッドを指定された
          * {0}:メソッド
          */
-        public static final PluginException BATCH_BODY_FORMAT_METHOD_ERROR = create("PR400-OD-0035");
+        public static final PluginBaseException BATCH_BODY_FORMAT_METHOD_ERROR = create("PR400-OD-0035");
 
         /**
          * クエリのパースに失敗.
          * {0}:失敗したクエリ
          */
-        public static final PluginException QUERY_PARSE_ERROR_WITH_PARAM = create("PR400-OD-0036");
+        public static final PluginBaseException QUERY_PARSE_ERROR_WITH_PARAM = create("PR400-OD-0036");
 
         /**
          * $batch内全体で指定された$topの値の合計が上限値を超えた.
          */
-        public static final PluginException BATCH_TOTAL_TOP_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0037");
+        public static final PluginBaseException BATCH_TOTAL_TOP_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0037");
 
         /**
          * $linksが作成可能な最大件数をオーバー.
          */
-        public static final PluginException LINK_UPPER_LIMIT_RECORD_EXEED = create("PR400-OD-0038");
+        public static final PluginBaseException LINK_UPPER_LIMIT_RECORD_EXEED = create("PR400-OD-0038");
 
         /**
          * 指定された$expandの値の合計が上限値を超えた.
          */
-        public static final PluginException EXPAND_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0039");
+        public static final PluginBaseException EXPAND_COUNT_LIMITATION_EXCEEDED = create("PR400-OD-0039");
 
         /**
          * $orderbyクエリに配列型のプロパティが指定された.
          */
-        public static final PluginException CANNOT_SPECIFY_THE_LIST_TYPE_TO_ORDERBY = create("PR400-OD-0040");
+        public static final PluginBaseException CANNOT_SPECIFY_THE_LIST_TYPE_TO_ORDERBY = create("PR400-OD-0040");
 
         /**
          * リクエストヘッダー{0}の値{1}が正しくない.
          */
-        public static final PluginException BAD_REQUEST_HEADER_VALUE = create("PR400-OD-0041");
+        public static final PluginBaseException BAD_REQUEST_HEADER_VALUE = create("PR400-OD-0041");
 
         /**
          * 未サポートの操作が実行された 詳細：{0}.
          */
-        public static final PluginException OPERATION_NOT_SUPPORTED = create("PR400-OD-0042");
+        public static final PluginBaseException OPERATION_NOT_SUPPORTED = create("PR400-OD-0042");
 
         /**
          * 未知の演算子が指定された場合.
          */
-        public static final PluginException UNSUPPORTED_QUERY_OPERATOR = create("PR400-OD-0043");
+        public static final PluginBaseException UNSUPPORTED_QUERY_OPERATOR = create("PR400-OD-0043");
 
         /**
          * 未知の関数が指定された場合.
          */
-        public static final PluginException UNSUPPORTED_QUERY_FUNCTION = create("PR400-OD-0044");
+        public static final PluginBaseException UNSUPPORTED_QUERY_FUNCTION = create("PR400-OD-0044");
 
         /**
          * 未知のプロパティを指定した場合.
          */
-        public static final PluginException UNKNOWN_QUERY_KEY = create("PR400-OD-0045");
+        public static final PluginBaseException UNKNOWN_QUERY_KEY = create("PR400-OD-0045");
 
         /**
          * プロパティのデータ型とは異なる書式の値が指定された場合.
          */
-        public static final PluginException OPERATOR_AND_OPERAND_TYPE_MISMATCHED = create("PR400-OD-0046");
+        public static final PluginBaseException OPERATOR_AND_OPERAND_TYPE_MISMATCHED = create("PR400-OD-0046");
 
         /**
          * プロパティのデータ型の範囲外の値が指定された場合.
          */
-        public static final PluginException UNSUPPORTED_OPERAND_FORMAT = create("PR400-OD-0047");
+        public static final PluginBaseException UNSUPPORTED_OPERAND_FORMAT = create("PR400-OD-0047");
 
         /**
          * 検索値のアンエスケープができなかった場合.
          */
-        public static final PluginException OPERATOR_AND_OPERAND_UNABLE_TO_UNESCAPE = create("PR400-OD-0048");
+        public static final PluginBaseException OPERATOR_AND_OPERAND_UNABLE_TO_UNESCAPE = create("PR400-OD-0048");
 
         /**
          * Cell URL Invalid format.
          * {0} property name
          */
-        public static final PluginException CELL_URL_FORMAT_ERROR = create("PR400-OD-0049");
+        public static final PluginBaseException CELL_URL_FORMAT_ERROR = create("PR400-OD-0049");
         /**
          * Schema URI Invalid format.
          * {0} property name
          */
-        public static final PluginException SCHEMA_URI_FORMAT_ERROR = create("PR400-OD-0050");
+        public static final PluginBaseException SCHEMA_URI_FORMAT_ERROR = create("PR400-OD-0050");
 
         /**
          * 該当EntitySetが存在しない.
          */
-        public static final PluginException NO_SUCH_ENTITY_SET = create("PR404-OD-0001");
+        public static final PluginBaseException NO_SUCH_ENTITY_SET = create("PR404-OD-0001");
         /**
          * 該当Entityが存在しない.
          */
-        public static final PluginException NO_SUCH_ENTITY = create("PR404-OD-0002");
+        public static final PluginBaseException NO_SUCH_ENTITY = create("PR404-OD-0002");
         /**
          * 該当リソースが存在しない.
          */
-        public static final PluginException NOT_FOUND = create("PR404-OD-0000");
+        public static final PluginBaseException NOT_FOUND = create("PR404-OD-0000");
         /**
          * 該当Navigation Propertyが存在しない.
          */
-        public static final PluginException NOT_SUCH_NAVPROP = create("PR404-OD-0003");
+        public static final PluginBaseException NOT_SUCH_NAVPROP = create("PR404-OD-0003");
         /**
          * 関係するデータが存在するエンティティへの操作.
          */
-        public static final PluginException CONFLICT_HAS_RELATED = create("PR409-OD-0001");
+        public static final PluginBaseException CONFLICT_HAS_RELATED = create("PR409-OD-0001");
         /**
          * リンクが既に存在する.
          */
-        public static final PluginException CONFLICT_LINKS = create("PR409-OD-0002");
+        public static final PluginBaseException CONFLICT_LINKS = create("PR409-OD-0002");
         /**
          * エンティティが既に存在する.
          */
-        public static final PluginException ENTITY_ALREADY_EXISTS = create("PR409-OD-0003");
+        public static final PluginBaseException ENTITY_ALREADY_EXISTS = create("PR409-OD-0003");
         /**
          * 複合キーのエンティティに対して$linksを削除した時に同名のエンティティが既に存在する.
          */
-        public static final PluginException CONFLICT_UNLINKED_ENTITY = create("PR409-OD-0004");
+        public static final PluginBaseException CONFLICT_UNLINKED_ENTITY = create("PR409-OD-0004");
         /**
          * 単一キーのエンティティに対して$linksを追加した時に同名のエンティティが既に存在する.
          */
-        public static final PluginException CONFLICT_DUPLICATED_ENTITY = create("PR409-OD-0005");
+        public static final PluginBaseException CONFLICT_DUPLICATED_ENTITY = create("PR409-OD-0005");
         /**
          * AssociationEndのLink登録時にすでに同一の関連が存在する.
          */
-        public static final PluginException CONFLICT_DUPLICATED_ENTITY_RELATION = create("PR409-OD-0006");
+        public static final PluginBaseException CONFLICT_DUPLICATED_ENTITY_RELATION = create("PR409-OD-0006");
         /**
          * If-Matchヘッダの指定が無い.
          */
-        public static final PluginException HEADER_NOT_EXIST = create("PR412-OD-0001");
+        public static final PluginBaseException HEADER_NOT_EXIST = create("PR412-OD-0001");
         /**
          * 該当EntityのEtagがマッチしない.
          */
-        public static final PluginException ETAG_NOT_MATCH = create("PR412-OD-0002");
+        public static final PluginBaseException ETAG_NOT_MATCH = create("PR412-OD-0002");
         /**
          * .
          */
-        public static final PluginException CONFLICT_NP = create("PR412-OD-0003");
+        public static final PluginBaseException CONFLICT_NP = create("PR412-OD-0003");
         /**
          * 未サポートのメディアタイプが指定された.
          */
-        public static final PluginException UNSUPPORTED_MEDIA_TYPE = create("PR415-OD-0001");
+        public static final PluginBaseException UNSUPPORTED_MEDIA_TYPE = create("PR415-OD-0001");
         /**
          * プロパティ名の重複を検出した.
          */
-        public static final PluginException DUPLICATED_PROPERTY_NAME = create("PR500-OD-0001");
+        public static final PluginBaseException DUPLICATED_PROPERTY_NAME = create("PR500-OD-0001");
         /**
          * 内部データの矛盾を検出した.
          */
-        public static final PluginException DETECTED_INTERNAL_DATA_CONFLICT = create("PR500-OD-0002");
+        public static final PluginBaseException DETECTED_INTERNAL_DATA_CONFLICT = create("PR500-OD-0002");
     }
 
     /**
@@ -350,145 +350,145 @@ public class PluginException extends RuntimeException {
         /**
          * XMLのパースに失敗したとき.
          */
-        public static final PluginException XML_ERROR = create("PR400-DV-0001");
+        public static final PluginBaseException XML_ERROR = create("PR400-DV-0001");
         /**
          * XMLの内容がおかしいとき.
          */
-        public static final PluginException XML_CONTENT_ERROR = create("PR400-DV-0002");
+        public static final PluginBaseException XML_CONTENT_ERROR = create("PR400-DV-0002");
         /**
          * Depthが0,1,infinity以外のとき.
          * {0}:Depthヘッダの値
          */
-        public static final PluginException INVALID_DEPTH_HEADER = create("PR400-DV-0003");
+        public static final PluginBaseException INVALID_DEPTH_HEADER = create("PR400-DV-0003");
         /**
          * ROLEが存在しない時.
          */
-        public static final PluginException ROLE_NOT_FOUND = create("PR400-DV-0004");
+        public static final PluginBaseException ROLE_NOT_FOUND = create("PR400-DV-0004");
         /**
          * Roleと紐付くBOXが存在しないとき.
          * {0}:BOX URL
          */
-        public static final PluginException BOX_LINKED_BY_ROLE_NOT_FOUND = create("PR400-DV-0005");
+        public static final PluginBaseException BOX_LINKED_BY_ROLE_NOT_FOUND = create("PR400-DV-0005");
         /**
          * XMLのバリデートに失敗したとき.
          */
-        public static final PluginException XML_VALIDATE_ERROR = create("PR400-DV-0006");
+        public static final PluginBaseException XML_VALIDATE_ERROR = create("PR400-DV-0006");
         /**
          * コレクションの子要素が多すぎる場合.
          */
-        public static final PluginException COLLECTION_CHILDRESOURCE_ERROR = create("PR400-DV-0007");
+        public static final PluginBaseException COLLECTION_CHILDRESOURCE_ERROR = create("PR400-DV-0007");
         /**
          * コレクションの階層が深すぎる場合.
          */
-        public static final PluginException COLLECTION_DEPTH_ERROR = create("PR400-DV-0008");
+        public static final PluginBaseException COLLECTION_DEPTH_ERROR = create("PR400-DV-0008");
         /**
          * ヘッダに不正な値が設定されている場合.
          * {0}:ヘッダのキー
          * {1}:ヘッダの値
          */
-        public static final PluginException INVALID_REQUEST_HEADER = create("PR400-DV-0009");
+        public static final PluginBaseException INVALID_REQUEST_HEADER = create("PR400-DV-0009");
         /**
          * 必須ヘッダの指定が無い場合.
          * {0}:ヘッダのキー
          */
-        public static final PluginException REQUIRED_REQUEST_HEADER_NOT_EXIST = create("PR400-DV-0010");
+        public static final PluginBaseException REQUIRED_REQUEST_HEADER_NOT_EXIST = create("PR400-DV-0010");
         /**
          * 移動元のリソースとして__srcが指定された場合.
          */
-        public static final PluginException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_MOVE = create("PR400-DV-0011");
+        public static final PluginBaseException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_MOVE = create("PR400-DV-0011");
         /**
          * 移動先のリソースとして、既存のリソースが指定された場合.
          */
-        public static final PluginException RESOURCE_PROHIBITED_TO_OVERWRITE = create("PR400-DV-0012");
+        public static final PluginBaseException RESOURCE_PROHIBITED_TO_OVERWRITE = create("PR400-DV-0012");
         /**
          * 移動先のリソースとして、ODataコレクション配下のパスが指定された場合.
          */
-        public static final PluginException RESOURCE_PROHIBITED_TO_MOVE_ODATA_COLLECTION = create("PR400-DV-0013");
+        public static final PluginBaseException RESOURCE_PROHIBITED_TO_MOVE_ODATA_COLLECTION = create("PR400-DV-0013");
         /**
          * 移動先のリソースとして、ファイル配下のパスが指定された場合.
          */
-        public static final PluginException RESOURCE_PROHIBITED_TO_MOVE_FILE = create("PR400-DV-0014");
+        public static final PluginBaseException RESOURCE_PROHIBITED_TO_MOVE_FILE = create("PR400-DV-0014");
         /**
          * BoxはMOVEメソッドでの移動対象とはできない.
          */
-        public static final PluginException RESOURCE_PROHIBITED_TO_MOVE_BOX = create("PR400-DV-0015");
+        public static final PluginBaseException RESOURCE_PROHIBITED_TO_MOVE_BOX = create("PR400-DV-0015");
         /**
          * 移動先のリソースとして、Serviceコレクション配下のパスが指定された場合.
          */
-        public static final PluginException RESOURCE_PROHIBITED_TO_MOVE_SERVICE_COLLECTION = create("PR400-DV-0016");
+        public static final PluginBaseException RESOURCE_PROHIBITED_TO_MOVE_SERVICE_COLLECTION = create("PR400-DV-0016");
         /**
          * 移動先のリソースとして__srcが指定された場合.
          */
-        public static final PluginException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_OVERWRITE = create("PR400-DV-0017");
+        public static final PluginBaseException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_OVERWRITE = create("PR400-DV-0017");
         /**
          * 移動元がコレクションで、移動先のリソースとしてサービスソースコレクションが指定された場合.
          */
-        public static final PluginException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_CONTAIN_COLLECTION =
+        public static final PluginBaseException SERVICE_SOURCE_COLLECTION_PROHIBITED_TO_CONTAIN_COLLECTION =
                 create("PR400-DV-0018");
 
         /**
          * リソースが存在しないとき.
          */
-        public static final PluginException RESOURCE_NOT_FOUND = create("PR404-DV-0001");
+        public static final PluginBaseException RESOURCE_NOT_FOUND = create("PR404-DV-0001");
         /**
          * BOXが存在しないとき.
          * {0}:BOX名
          */
-        public static final PluginException BOX_NOT_FOUND = create("PR404-DV-0002");
+        public static final PluginBaseException BOX_NOT_FOUND = create("PR404-DV-0002");
         /**
          * CELLが存在しないとき.
          */
-        public static final PluginException CELL_NOT_FOUND = create("PR404-DV-0003");
+        public static final PluginBaseException CELL_NOT_FOUND = create("PR404-DV-0003");
         /**
          * メソッドが受け付けられないとき.
          */
-        public static final PluginException METHOD_NOT_ALLOWED = create("PR405-DV-0001");
+        public static final PluginBaseException METHOD_NOT_ALLOWED = create("PR405-DV-0001");
         /**
          * Depthがinfinityのとき.
          */
-        public static final PluginException PROPFIND_FINITE_DEPTH = create("PR403-DV-0001");
+        public static final PluginBaseException PROPFIND_FINITE_DEPTH = create("PR403-DV-0001");
         /**
          * コレクション削除時に子リソースがある場合は削除失敗.
          */
-        public static final PluginException HAS_CHILDREN = create("PR403-DV-0003");
+        public static final PluginBaseException HAS_CHILDREN = create("PR403-DV-0003");
         /**
          * コレクション・ファイル名が不正なとき.
          */
-        public static final PluginException RESOURCE_NAME_INVALID = create("PR403-DV-0004");
+        public static final PluginBaseException RESOURCE_NAME_INVALID = create("PR403-DV-0004");
         /**
          * 移動元と移動先が同じ場合.
          * {0}:Destination ヘッダの値
          */
-        public static final PluginException DESTINATION_EQUALS_SOURCE_URL = create("PR403-DV-0005");
+        public static final PluginBaseException DESTINATION_EQUALS_SOURCE_URL = create("PR403-DV-0005");
 
         /**
          * コレクション・ファイルのPUT・MKCOL・MOVE時に親リソースが存在しない時.
          */
-        public static final PluginException HAS_NOT_PARENT = create("PR409-DV-0001");
+        public static final PluginBaseException HAS_NOT_PARENT = create("PR409-DV-0001");
         /**
          * 該当リソースのEtagがマッチしない.
          */
-        public static final PluginException ETAG_NOT_MATCH = create("PR412-DV-0001");
+        public static final PluginBaseException ETAG_NOT_MATCH = create("PR412-DV-0001");
         /**
          * Overwriteヘッダで"F"が指定されたが移動先のリソースが既に存在する時.
          */
-        public static final PluginException DESTINATION_ALREADY_EXISTS = create("PR412-DV-0002");
+        public static final PluginBaseException DESTINATION_ALREADY_EXISTS = create("PR412-DV-0002");
         /**
          * Rangeヘッダ指定誤り.
          */
-        public static final PluginException REQUESTED_RANGE_NOT_SATISFIABLE = create("PR416-DV-0001");
+        public static final PluginBaseException REQUESTED_RANGE_NOT_SATISFIABLE = create("PR416-DV-0001");
         /**
          * ファイルシステムの矛盾を検知.
          */
-        public static final PluginException FS_INCONSISTENCY_FOUND = create("PR500-DV-0001");
+        public static final PluginBaseException FS_INCONSISTENCY_FOUND = create("PR500-DV-0001");
         /**
          * Boxから辿ってidで検索して、Davデータに不整合があった場合.
          */
-        public static final PluginException DAV_INCONSISTENCY_FOUND = create("PR500-DV-0002");
+        public static final PluginBaseException DAV_INCONSISTENCY_FOUND = create("PR500-DV-0002");
         /**
          * Boxから辿ってidで検索して、Davデータに不整合があった場合.
          */
-        public static final PluginException DAV_UNAVAILABLE = create("PR503-DV-0001");
+        public static final PluginBaseException DAV_UNAVAILABLE = create("PR503-DV-0001");
     }
 
     /**
@@ -498,28 +498,28 @@ public class PluginException extends RuntimeException {
         /**
          * DC-Engineの接続に失敗した場合.
          */
-        public static final PluginException SC_ENGINE_CONNECTION_ERROR = create("PR500-SC-0001");
+        public static final PluginBaseException SC_ENGINE_CONNECTION_ERROR = create("PR500-SC-0001");
         /**
          * ファイルのオープンに失敗した場合(未使用_実装内容に言及しているため、使用しないこと).
          */
-        public static final PluginException SC_FILE_OPEN_ERROR = create("PR500-SC-0002");
+        public static final PluginBaseException SC_FILE_OPEN_ERROR = create("PR500-SC-0002");
         /**
          * ファイルのクローズに失敗した場合(未使用_実装内容に言及しているため、使用しないこと).
          */
-        public static final PluginException SC_FILE_CLOSE_ERROR = create("PR500-SC-0003");
+        public static final PluginBaseException SC_FILE_CLOSE_ERROR = create("PR500-SC-0003");
 
         /**
          * ファイルのクローズに失敗した場合(未使用_実装内容に言及しているため、使用しないこと).
          */
-        public static final PluginException SC_IO_ERROR = create("PR500-SC-0004");
+        public static final PluginBaseException SC_IO_ERROR = create("PR500-SC-0004");
         /**
          * その他のエラー.
          */
-        public static final PluginException SC_UNKNOWN_ERROR = create("PR500-SC-0005");
+        public static final PluginBaseException SC_UNKNOWN_ERROR = create("PR500-SC-0005");
         /**
          * サービス呼出しで不正なHTTPレスポンスが返却された場合のエラー.
          */
-        public static final PluginException SC_INVALID_HTTP_RESPONSE_ERROR = create("PR500-SC-0006");
+        public static final PluginBaseException SC_INVALID_HTTP_RESPONSE_ERROR = create("PR500-SC-0006");
     }
 
     /**
@@ -530,25 +530,25 @@ public class PluginException extends RuntimeException {
          * ToRelationに指定されたリソースが存在しない場合.
          * {0}：指定された値
          */
-        public static final PluginException TO_RELATION_NOT_FOUND_ERROR = create("PR400-SM-0001");
+        public static final PluginBaseException TO_RELATION_NOT_FOUND_ERROR = create("PR400-SM-0001");
         /**
          * ToRelationに指定されたリソースに紐付くExtCellが存在しない場合.
          * {0}：指定された値
          */
-        public static final PluginException RELATED_EXTCELL_NOT_FOUND_ERROR = create("PR400-SM-0002");
+        public static final PluginBaseException RELATED_EXTCELL_NOT_FOUND_ERROR = create("PR400-SM-0002");
         /**
          * 送信先URLが最大送信許可数を超えた場合.
          */
-        public static final PluginException OVER_MAX_SENT_NUM = create("PR400-SM-0003");
+        public static final PluginBaseException OVER_MAX_SENT_NUM = create("PR400-SM-0003");
 
         /**
          * リクエストに失敗した場合.
          */
-        public static final PluginException SM_CONNECTION_ERROR = create("PR500-SM-0001");
+        public static final PluginBaseException SM_CONNECTION_ERROR = create("PR500-SM-0001");
         /**
          * ボディのパースに失敗した場合.
          */
-        public static final PluginException SM_BODY_PARSE_ERROR = create("PR500-SM-0002");
+        public static final PluginBaseException SM_BODY_PARSE_ERROR = create("PR500-SM-0002");
     }
 
     /**
@@ -558,31 +558,31 @@ public class PluginException extends RuntimeException {
         /**
          * メッセージの関係登録で既に関係が存在する.
          */
-        public static final PluginException REQUEST_RELATION_EXISTS_ERROR = create("PR400-RM-0001");
+        public static final PluginBaseException REQUEST_RELATION_EXISTS_ERROR = create("PR400-RM-0001");
         /**
          * メッセージのRequestRelationのパースに失敗.
          */
-        public static final PluginException REQUEST_RELATION_PARSE_ERROR = create("PR409-RM-0001");
+        public static final PluginBaseException REQUEST_RELATION_PARSE_ERROR = create("PR409-RM-0001");
 
         /**
          * 関係削除対象のRelationが存在しない.
          */
-        public static final PluginException REQUEST_RELATION_DOES_NOT_EXISTS = create("PR409-RM-0002");
+        public static final PluginBaseException REQUEST_RELATION_DOES_NOT_EXISTS = create("PR409-RM-0002");
 
         /**
          * メッセージのRequestRelationTargetのパースに失敗.
          */
-        public static final PluginException REQUEST_RELATION_TARGET_PARSE_ERROR = create("PR409-RM-0003");
+        public static final PluginBaseException REQUEST_RELATION_TARGET_PARSE_ERROR = create("PR409-RM-0003");
 
         /**
          * 関係削除対象のExtCellが存在しない.
          */
-        public static final PluginException REQUEST_RELATION_TARGET_DOES_NOT_EXISTS = create("PR409-RM-0004");
+        public static final PluginBaseException REQUEST_RELATION_TARGET_DOES_NOT_EXISTS = create("PR409-RM-0004");
 
         /**
          * RequestRelationとRequestRelationTargetのリンク情報が存在しない.
          */
-        public static final PluginException LINK_DOES_NOT_EXISTS = create("PR409-RM-0005");
+        public static final PluginBaseException LINK_DOES_NOT_EXISTS = create("PR409-RM-0005");
     }
 
     /**
@@ -593,56 +593,56 @@ public class PluginException extends RuntimeException {
         /**
          * 原因不明のエラー.
          */
-        public static final PluginException UNKNOWN_ERROR = create("PR500-SV-0000");
+        public static final PluginBaseException UNKNOWN_ERROR = create("PR500-SV-0000");
         /**
          * データストアへの接続に失敗したとき.
          */
-        public static final PluginException DATA_STORE_CONNECTION_ERROR = create("PR500-SV-0001");
+        public static final PluginBaseException DATA_STORE_CONNECTION_ERROR = create("PR500-SV-0001");
         /**
          * データストア関連の不明なエラー.
          */
-        public static final PluginException DATA_STORE_UNKNOWN_ERROR = create("PR500-SV-0002");
+        public static final PluginBaseException DATA_STORE_UNKNOWN_ERROR = create("PR500-SV-0002");
         /**
          * ESへのリクエストでリトライオーバーしたとき.
          */
-        public static final PluginException ES_RETRY_OVER = create("PR500-SV-0003");
+        public static final PluginBaseException ES_RETRY_OVER = create("PR500-SV-0003");
         /**
          * ファイルシステムに異常が発生したとき.
          */
-        public static final PluginException FILE_SYSTEM_ERROR = create("PR500-SV-0004");
+        public static final PluginBaseException FILE_SYSTEM_ERROR = create("PR500-SV-0004");
         /**
          * データストアの検索に失敗.
          */
-        public static final PluginException DATA_STORE_SEARCH_ERROR = create("PR500-SV-0005");
+        public static final PluginBaseException DATA_STORE_SEARCH_ERROR = create("PR500-SV-0005");
         /**
          * データストアの更新に失敗し、ロールバックにも失敗した.
          */
-        public static final PluginException DATA_STORE_UPDATE_ROLLBACK_ERROR = create("PR500-SV-0006");
+        public static final PluginBaseException DATA_STORE_UPDATE_ROLLBACK_ERROR = create("PR500-SV-0006");
         /**
          * データストアの更新に失敗し、ロールバックが成功した.
          */
-        public static final PluginException DATA_STORE_UPDATE_ERROR_ROLLBACKED = create("PR500-SV-0007");
+        public static final PluginBaseException DATA_STORE_UPDATE_ERROR_ROLLBACKED = create("PR500-SV-0007");
 
         /**
          * memcachedへの接続に失敗したとき.
          */
-        public static final PluginException SERVER_CONNECTION_ERROR = create("PR503-SV-0002");
+        public static final PluginBaseException SERVER_CONNECTION_ERROR = create("PR503-SV-0002");
         /**
          * Memcachedのロックステータス取得に失敗したとき.
          */
-        public static final PluginException GET_LOCK_STATE_ERROR = create("PR503-SV-0003");
+        public static final PluginBaseException GET_LOCK_STATE_ERROR = create("PR503-SV-0003");
         /**
          * ユニットユーザ単位のデータリストア中のとき.
          */
-        public static final PluginException SERVICE_MENTENANCE_RESTORE = create("PR503-SV-0004");
+        public static final PluginBaseException SERVICE_MENTENANCE_RESTORE = create("PR503-SV-0004");
         /**
          * ReadDeleteOnlyモード状態のとき.
          */
-        public static final PluginException READ_DELETE_ONLY = create("PR503-SV-0005");
+        public static final PluginBaseException READ_DELETE_ONLY = create("PR503-SV-0005");
         /**
          * Adsへの接続に失敗したとき.
          */
-        public static final PluginException ADS_CONNECTION_ERROR = create("PR503-SV-0006");
+        public static final PluginBaseException ADS_CONNECTION_ERROR = create("PR503-SV-0006");
     }
 
     /**
@@ -652,19 +652,19 @@ public class PluginException extends RuntimeException {
         /**
          * NetWork関連エラー.
          */
-        public static final PluginException NETWORK_ERROR = create("PR500-NW-0000");
+        public static final PluginBaseException NETWORK_ERROR = create("PR500-NW-0000");
         /**
          * HTTPリクエストに失敗.
          */
-        public static final PluginException HTTP_REQUEST_FAILED = create("PR500-NW-0001");
+        public static final PluginBaseException HTTP_REQUEST_FAILED = create("PR500-NW-0001");
         /**
          * 接続先が想定外の応答を返却.
          */
-        public static final PluginException UNEXPECTED_RESPONSE = create("PR500-NW-0002");
+        public static final PluginBaseException UNEXPECTED_RESPONSE = create("PR500-NW-0002");
         /**
          * 接続先が想定外の値を返却.
          */
-        public static final PluginException UNEXPECTED_VALUE = create("PR500-NW-0003");
+        public static final PluginBaseException UNEXPECTED_VALUE = create("PR500-NW-0003");
     }
 
     /**
@@ -674,56 +674,56 @@ public class PluginException extends RuntimeException {
         /**
          * パスワード文字列が不正.
          */
-        public static final PluginException PASSWORD_INVALID = create("PR400-AU-0001");
+        public static final PluginBaseException PASSWORD_INVALID = create("PR400-AU-0001");
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_INVALID = create("PR400-AU-0002");
+        public static final PluginBaseException REQUEST_PARAM_INVALID = create("PR400-AU-0002");
         /**
          * パスワード文字列が不正.
          */
-        public static final PluginException DC_CREDENTIAL_REQUIRED = create("PR400-AU-0003");
+        public static final PluginBaseException DC_CREDENTIAL_REQUIRED = create("PR400-AU-0003");
 
         /**
          * ユニットユーザアクセスではない.
          */
-        public static final PluginException UNITUSER_ACCESS_REQUIRED = create("PR403-AU-0001");
+        public static final PluginBaseException UNITUSER_ACCESS_REQUIRED = create("PR403-AU-0001");
         /**
          * 必要な権限が無い.
          */
-        public static final PluginException NECESSARY_PRIVILEGE_LACKING = create("PR403-AU-0002");
+        public static final PluginBaseException NECESSARY_PRIVILEGE_LACKING = create("PR403-AU-0002");
         /**
          * 認証ヘッダに指定されたユニットユーザではアクセセスできない.
          */
-        public static final PluginException NOT_YOURS = create("PR403-AU-0003");
+        public static final PluginBaseException NOT_YOURS = create("PR403-AU-0003");
         /**
          * スキーマ認証が必要.
          */
-        public static final PluginException SCHEMA_AUTH_REQUIRED = create("PR403-AU-0004");
+        public static final PluginBaseException SCHEMA_AUTH_REQUIRED = create("PR403-AU-0004");
         /**
          * このスキーマ認証ではアクセスできない.
          */
-        public static final PluginException SCHEMA_MISMATCH = create("PR403-AU-0005");
+        public static final PluginBaseException SCHEMA_MISMATCH = create("PR403-AU-0005");
         /**
          * スキーマ認証レベルが不足.
          */
-        public static final PluginException INSUFFICIENT_SCHEMA_AUTHZ_LEVEL = create("PR403-AU-0006");
+        public static final PluginBaseException INSUFFICIENT_SCHEMA_AUTHZ_LEVEL = create("PR403-AU-0006");
         /**
          * ルートCA証明書の設定エラー.
          */
-        public static final PluginException ROOT_CA_CRT_SETTING_ERROR = create("PR500-AN-0001");
+        public static final PluginBaseException ROOT_CA_CRT_SETTING_ERROR = create("PR500-AN-0001");
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_CLIENTID_INVALID = create("PR400-AZ-0002");
+        public static final PluginBaseException REQUEST_PARAM_CLIENTID_INVALID = create("PR400-AZ-0002");
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_REDIRECT_INVALID = create("PR400-AZ-0003");
+        public static final PluginBaseException REQUEST_PARAM_REDIRECT_INVALID = create("PR400-AZ-0003");
         /**
          * IdTokenが不正.
          */
-        public static final PluginException IDTOKEN_ENCODED_INVALID = create("PR400-AZ-0004");
+        public static final PluginBaseException IDTOKEN_ENCODED_INVALID = create("PR400-AZ-0004");
 
     }
 
@@ -734,29 +734,29 @@ public class PluginException extends RuntimeException {
         /**
          * JSONパースに失敗.
          */
-        public static final PluginException JSON_PARSE_ERROR = create("PR400-EV-0001");
+        public static final PluginBaseException JSON_PARSE_ERROR = create("PR400-EV-0001");
         /**
          * X-Dc-RequestKey の値が不正.
          */
-        public static final PluginException X_DC_REQUESTKEY_INVALID = create("PR400-EV-0002");
+        public static final PluginBaseException X_DC_REQUESTKEY_INVALID = create("PR400-EV-0002");
         /**
          * リクエストボディの必須項目が無い.
          * {0}:プロパティ名
          */
-        public static final PluginException INPUT_REQUIRED_FIELD_MISSING = create("PR400-EV-0003");
+        public static final PluginBaseException INPUT_REQUIRED_FIELD_MISSING = create("PR400-EV-0003");
         /**
          * リクエストデータのフォーマットが不正.
          * {0}プロパティ名
          */
-        public static final PluginException REQUEST_FIELD_FORMAT_ERROR = create("PR400-EV-0004");
+        public static final PluginBaseException REQUEST_FIELD_FORMAT_ERROR = create("PR400-EV-0004");
         /**
          * Httpレスポンスの出力に失敗したとき.
          */
-        public static final PluginException EVENT_RESPONSE_FAILED = create("PR500-EV-0001");
+        public static final PluginBaseException EVENT_RESPONSE_FAILED = create("PR500-EV-0001");
         /**
          * 圧縮されたイベントログファイルがオープンできないとき.
          */
-        public static final PluginException ARCHIVE_FILE_CANNOT_OPEN = create("PR500-EV-0002");
+        public static final PluginBaseException ARCHIVE_FILE_CANNOT_OPEN = create("PR500-EV-0002");
 
     }
 
@@ -767,47 +767,47 @@ public class PluginException extends RuntimeException {
         /**
          * リクエストヘッダーの値が不正なとき.
          */
-        public static final PluginException REQUEST_HEADER_FORMAT_ERROR = create("PR400-BI-0001");
+        public static final PluginBaseException REQUEST_HEADER_FORMAT_ERROR = create("PR400-BI-0001");
         /**
          * Barファイルのファイルサイズが上限値を超えているとき.
          */
-        public static final PluginException BAR_FILE_SIZE_TOO_LARGE = create("PR400-BI-0002");
+        public static final PluginBaseException BAR_FILE_SIZE_TOO_LARGE = create("PR400-BI-0002");
         /**
          * Barファイル内エントリのファイルサイズが上限値を超えているとき.
          */
-        public static final PluginException BAR_FILE_ENTRY_SIZE_TOO_LARGE = create("PR400-BI-0003");
+        public static final PluginBaseException BAR_FILE_ENTRY_SIZE_TOO_LARGE = create("PR400-BI-0003");
         /**
          * インストール対象のBoxがBox Schemaとして登録済みのとき.
          */
-        public static final PluginException BAR_FILE_BOX_SCHEMA_ALREADY_EXISTS = create("PR400-BI-0004");
+        public static final PluginBaseException BAR_FILE_BOX_SCHEMA_ALREADY_EXISTS = create("PR400-BI-0004");
         /**
          * Barファイルのファイルサイズが上限値を超えているとき.
          */
-        public static final PluginException BAR_FILE_SIZE_INVALID = create("PR400-BI-0005");
+        public static final PluginBaseException BAR_FILE_SIZE_INVALID = create("PR400-BI-0005");
         /**
          * JSONファイルの形式が不正なとき.
          */
-        public static final PluginException JSON_FILE_FORMAT_ERROR = create("PR400-BI-0006");
+        public static final PluginBaseException JSON_FILE_FORMAT_ERROR = create("PR400-BI-0006");
         /**
          * barファイルがオープンできないとき.
          */
-        public static final PluginException BAR_FILE_CANNOT_OPEN = create("PR400-BI-0007");
+        public static final PluginBaseException BAR_FILE_CANNOT_OPEN = create("PR400-BI-0007");
         /**
          * barファイルが読み込めないとき.
          */
-        public static final PluginException BAR_FILE_CANNOT_READ = create("PR400-BI-0008");
+        public static final PluginBaseException BAR_FILE_CANNOT_READ = create("PR400-BI-0008");
         /**
          * barファイルの構造が正しくないとき.
          */
-        public static final PluginException BAR_FILE_INVALID_STRUCTURES = create("PR400-BI-0009");
+        public static final PluginBaseException BAR_FILE_INVALID_STRUCTURES = create("PR400-BI-0009");
         /**
          * インストール対象のBoxが登録済みのとき.
          */
-        public static final PluginException BAR_FILE_BOX_ALREADY_EXISTS = create("PR405-BI-0001");
+        public static final PluginBaseException BAR_FILE_BOX_ALREADY_EXISTS = create("PR405-BI-0001");
         /**
          * Httpレスポンスの出力に失敗したとき.
          */
-        public static final PluginException BAR_FILE_RESPONSE_FAILED = create("PR500-BI-0001");
+        public static final PluginBaseException BAR_FILE_RESPONSE_FAILED = create("PR500-BI-0001");
     }
 
     /**
@@ -817,33 +817,33 @@ public class PluginException extends RuntimeException {
         /**
          * メソッドが受け付けられないとき.
          */
-        public static final PluginException METHOD_NOT_ALLOWED = create("PR405-MC-0001");
+        public static final PluginBaseException METHOD_NOT_ALLOWED = create("PR405-MC-0001");
         /**
          * サーバ内の処理中にキャンセルされた場合。
          * $batchのタイムアウトで使用。
          */
-        public static final PluginException SERVER_REQUEST_TIMEOUT = create("PR408-MC-0001");
+        public static final PluginBaseException SERVER_REQUEST_TIMEOUT = create("PR408-MC-0001");
         /**
          * セル一括削除時に削除対象のセルにアクセスがあったとき.
          */
-        public static final PluginException CONFLICT_CELLACCESS = create("PR409-MC-0001");
+        public static final PluginBaseException CONFLICT_CELLACCESS = create("PR409-MC-0001");
         /**
          * ヘッダの前提条件指定が満たされていないとき.
          */
-        public static final PluginException PRECONDITION_FAILED = create("PR412-MC-0001");
+        public static final PluginBaseException PRECONDITION_FAILED = create("PR412-MC-0001");
         /**
          * メソッドが未実装のとき.
          */
-        public static final PluginException METHOD_NOT_IMPLEMENTED = create("PR501-MC-0001");
+        public static final PluginBaseException METHOD_NOT_IMPLEMENTED = create("PR501-MC-0001");
         /**
          * 未実装機能.
          */
-        public static final PluginException NOT_IMPLEMENTED = create("PR501-MC-0002");
+        public static final PluginBaseException NOT_IMPLEMENTED = create("PR501-MC-0002");
         /**
          * 同時リクエストが多すぎるとき.
          * 排他制御のタイムアウトで使用。
          */
-        public static final PluginException TOO_MANY_CONCURRENT_REQUESTS = create("PR503-SV-0001");
+        public static final PluginBaseException TOO_MANY_CONCURRENT_REQUESTS = create("PR503-SV-0001");
 
     }
 
@@ -873,7 +873,7 @@ public class PluginException extends RuntimeException {
      * @param code エラーコード
      * @param message エラーメッセージ
      */
-    PluginException(final String code,
+    PluginBaseException(final String code,
             final Severity severity,
             final String message,
             final int status,
@@ -892,7 +892,7 @@ public class PluginException extends RuntimeException {
      * @param code エラーコード
      * @param message エラーメッセージ
      */
-    protected PluginException(final String code,
+    protected PluginBaseException(final String code,
             final Severity severity,
             final String message,
             final int status) {
@@ -943,20 +943,20 @@ public class PluginException extends RuntimeException {
     /**
      * 原因例外を追加したものを作成して返します.
      * @param t 原因例外
-     * @return PluginException
+     * @return PluginBaseException
      */
-    public PluginException reason(final Throwable t) {
+    public PluginBaseException reason(final Throwable t) {
         // クローンを作成
-        PluginException ret = new PluginException(this.code, this.severity, this.message, this.status, t);
+        PluginBaseException ret = new PluginBaseException(this.code, this.severity, this.message, this.status, t);
         return ret;
     }
 
     /**
      * メッセージをパラメタ置換したものを作成して返します. エラーメッセージ上の $1 $2 等の表現がパラメタ置換用キーワードです。
      * @param params 付加メッセージ
-     * @return PluginException
+     * @return PluginBaseException
      */
-    public PluginException params(final Object... params) {
+    public PluginBaseException params(final Object... params) {
         // 置換メッセージ作成
         String ms = MessageFormat.format(this.message, params);
 
@@ -964,16 +964,16 @@ public class PluginException extends RuntimeException {
         ms = EscapeControlCode.escape(ms);
 
         // メッセージ置換クローンを作成
-        PluginException ret = new PluginException(this.code, this.severity, ms, this.status);
+        PluginBaseException ret = new PluginBaseException(this.code, this.severity, ms, this.status);
         return ret;
     }
 
     /**
      * ファクトリーメソッド.
      * @param code メッセージコード
-     * @return PluginException
+     * @return PluginBaseException
      */
-    public static PluginException create(String code) {
+    public static PluginBaseException create(String code) {
         int statusCode = parseCode(code);
 
         // ログレベルの取得
@@ -986,7 +986,7 @@ public class PluginException extends RuntimeException {
         // ログメッセージの取得
         String message = PluginMessageUtils.getMessage(code);
 
-        return new PluginException(code, severity, message, statusCode);
+        return new PluginBaseException(code, severity, message, statusCode);
     }
 
     /**

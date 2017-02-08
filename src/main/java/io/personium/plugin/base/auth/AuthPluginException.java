@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 package io.personium.plugin.base.auth;
 
-import io.personium.plugin.base.PluginException;
+import io.personium.plugin.base.PluginBaseException;
 import io.personium.plugin.base.PluginMessageUtils;
 import io.personium.plugin.base.PluginMessageUtils.Severity;
 import io.personium.plugin.base.auth.OAuth2Helper.Error;
@@ -33,19 +33,18 @@ import org.json.simple.JSONObject;
 
 /**
  * AuthPluginException.
- */
-/**
+ *
  * @author fjqs
  */
 @SuppressWarnings("serial")
-public final class AuthPluginException extends PluginException {
+public final class AuthPluginException extends PluginBaseException {
 
     /**
      * Grant-Typeの値が異常.
      */
     public static final AuthPluginException UNSUPPORTED_GRANT_TYPE = create("PR400-AN-0001", Error.UNSUPPORTED_GRANT_TYPE);
     /**
-     * dc_targetの値異常.
+     * personium_targetの値異常.
      */
     public static final AuthPluginException INVALID_TARGET = create("PR400-AN-0002", Error.INVALID_REQUEST);
     /**
@@ -137,6 +136,11 @@ public final class AuthPluginException extends PluginException {
     public static final AuthPluginException OIDC_EXPIRED_ID_TOKEN = create("PR400-AN-0033", Error.INVALID_GRANT);
 
     /**
+     * 接続先が想定外の値を返却.
+     */
+    public static final AuthPluginException OIDC_UNEXPECTED_VALUE = create("PR400-AN-0034", Error.INVALID_GRANT);
+
+    /**
      * インナークラスを強制的にロードする.
      */
     public static void loadConfig() {
@@ -201,11 +205,11 @@ public final class AuthPluginException extends PluginException {
     /**
      * 原因例外を追加したものを作成して返します.
      * @param t 原因例外
-     * @return PluginException
+     * @return PluginBaseException
      */
-    public PluginException reason(final Throwable t) {
+    public PluginBaseException reason(final Throwable t) {
         // クローンを作成して
-        PluginException ret = new AuthPluginException(
+        PluginBaseException ret = new AuthPluginException(
                 this.code, this.severity, this.message, this.status, this.error, this.realm);
         // スタックトレースをセット
         ret.setStackTrace(t.getStackTrace());
@@ -216,10 +220,10 @@ public final class AuthPluginException extends PluginException {
      * ファクトリーメソッド.
      * @param code DCメッセージコード
      * @param error OAuth2エラーコード
-     * @return PluginException
+     * @return PluginBaseException
      */
     public static AuthPluginException create(String code, String error) {
-        int statusCode = PluginException.parseCode(code);
+        int statusCode = PluginBaseException.parseCode(code);
 
         // ログレベルの取得
         Severity severity = PluginMessageUtils.getSeverity(code);

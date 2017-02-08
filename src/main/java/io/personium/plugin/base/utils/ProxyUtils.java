@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 package io.personium.plugin.base.utils;
 
-import io.personium.plugin.base.PluginConfig;
+import io.personium.plugin.base.PluginBaseConfig;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -53,8 +53,8 @@ public class ProxyUtils {
      * @return false/true boolean
      */
     public static boolean isProxyHost() {
-        String host = PluginConfig.getProxyHostName();
-        int port = PluginConfig.getProxyHostNumber();
+        String host = PluginBaseConfig.getProxyHostName();
+        int port = PluginBaseConfig.getProxyHostNumber();
         return isValid(host) && port > 0;
     }
 
@@ -64,12 +64,12 @@ public class ProxyUtils {
      */
     public static CloseableHttpClient proxyHttpClient() {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        String host = PluginConfig.getProxyHostName();
-        int port = PluginConfig.getProxyHostNumber();
+        String host = PluginBaseConfig.getProxyHostName();
+        int port = PluginBaseConfig.getProxyHostNumber();
 
         if (isValid(host) && port > 0) {
-            String user = PluginConfig.getProxyUserName();
-            String pswd = PluginConfig.getProxyPassword();
+            String user = PluginBaseConfig.getProxyUserName();
+            String pswd = PluginBaseConfig.getProxyPassword();
             if (isValid(user) && isValid(pswd)) {
                 credsProvider.setCredentials(
                         new AuthScope(host, port),
@@ -89,8 +89,8 @@ public class ProxyUtils {
      */
     public static RequestConfig getRequestConfig() {
         RequestConfig config = null;
-        String host = PluginConfig.getProxyHostName();
-        int port = PluginConfig.getProxyHostNumber();
+        String host = PluginBaseConfig.getProxyHostName();
+        int port = PluginBaseConfig.getProxyHostNumber();
         if (isValid(host) && port > 0) {
             HttpHost proxy = new HttpHost(host, port);
             config = RequestConfig.custom().setProxy(proxy).build();

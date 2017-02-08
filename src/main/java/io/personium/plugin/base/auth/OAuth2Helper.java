@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -264,15 +264,15 @@ public final class OAuth2Helper {
          */
         public static final String SCOPE = "scope";
         /**
-         * dc_target.
+         * personium_target.
          */
         public static final String TARGET = "dc_target";
         /**
-         * dc_owner.
+         * personium_owner.
          */
         public static final String OWNER = "dc_owner";
         /**
-         * dc_owner value.
+         * personium_owner value.
          */
         public static final String TRUE_STR = "true";
         /**

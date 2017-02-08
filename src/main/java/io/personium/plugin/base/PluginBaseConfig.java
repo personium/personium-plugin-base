@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 package io.personium.plugin.base;
-
-import io.personium.plugin.base.auth.AuthPluginException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 設定情報を保持するクラス. このクラスからクラスパス上にある personium-unit-config.propertiesの内容にアクセスできます。
  */
-public class PluginConfig {
+public class PluginBaseConfig {
     private static final int DEFAULT_BATCH_TIMEOUT = 270000;
     private static final int DEFAULT_BATCH_SLEEP_INTERVAL = 1000;
     private static final int DEFAULT_BATCH_SLEEP = 50;
@@ -701,15 +699,14 @@ public class PluginConfig {
 
     static {
         // 各種メッセージ出力クラスを強制的にロードする
-        PluginLog.loadConfig();
-        PluginException.loadConfig();
-        AuthPluginException.loadConfig();
+        PluginBaseLog.loadConfig();
+        PluginBaseException.loadConfig();
     }
 
     /**
      * singleton.
      */
-    private static PluginConfig singleton = new PluginConfig();
+    private static PluginBaseConfig singleton = new PluginBaseConfig();
 
     // static Logger log = LoggerFactory.getLogger(PersoniumCoreConfig.class);
 
@@ -726,7 +723,7 @@ public class PluginConfig {
     /**
      * protectedなコンストラクタ.
      */
-    protected PluginConfig() {
+    protected PluginBaseConfig() {
         this.doReload();
     }
 
@@ -734,7 +731,7 @@ public class PluginConfig {
      * 設定のリロード.
      */
     private synchronized void doReload() {
-        Logger log = LoggerFactory.getLogger(PluginConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
         Properties properties = getUnitConfigDefaultProperties();
         Properties propertiesOverride = getPersoniumConfigProperties();
         // 読み込みに成功した場合、メンバ変数へ置換する
@@ -794,7 +791,7 @@ public class PluginConfig {
      */
     protected Properties getUnitConfigDefaultProperties() {
         Properties properties = new Properties();
-        InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config-default.properties");
+        InputStream is = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config-default.properties");
         try {
             properties.load(is);
         } catch (IOException e) {
@@ -814,7 +811,7 @@ public class PluginConfig {
      * @return personium-unit-config.properties
      */
     protected Properties getPersoniumConfigProperties() {
-        Logger log = LoggerFactory.getLogger(PluginConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
         Properties propertiesOverride = new Properties();
         String configFilePath = System.getProperty(KEY_CONFIG_FILE);
         InputStream is = getConfigFileInputStream(configFilePath);
@@ -845,10 +842,10 @@ public class PluginConfig {
      */
     @SuppressWarnings("resource")
 	protected InputStream getConfigFileInputStream(String configFilePath) {
-        Logger log = LoggerFactory.getLogger(PluginConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
         InputStream configFileInputStream = null;
         if (configFilePath == null) {
-            configFileInputStream = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
+            configFileInputStream = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
             return configFileInputStream;
         }
 
@@ -859,7 +856,7 @@ public class PluginConfig {
             log.info("personium-unit-config.properties from system properties.");
         } catch (FileNotFoundException e) {
             // 指定されたパスにファイルが存在しない場合は、クラスパス上のファイルを読み込む
-            configFileInputStream = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
+            configFileInputStream = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
             log.info("personium-unit-config.properties from class path.");
         }
         return configFileInputStream;
@@ -1579,7 +1576,7 @@ public class PluginConfig {
      * @return boolean httpsの場合:true
      */
     public static boolean isHttps() {
-        return PluginConfig.getUnitScheme().equals("https");
+        return PluginBaseConfig.getUnitScheme().equals("https");
     }
 
     /**

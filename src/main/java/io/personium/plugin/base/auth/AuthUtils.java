@@ -1,6 +1,6 @@
 /**
  * personium.io
- * Copyright 2014 FUJITSU LIMITED
+ * Copyright 2017 FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.CharEncoding;
 
-import io.personium.plugin.base.PluginConfig;
-import io.personium.plugin.base.PluginException;
+import io.personium.plugin.base.PluginBaseConfig;
+import io.personium.plugin.base.PluginBaseException;
 import io.personium.plugin.base.model.Account;
 import io.personium.plugin.base.odata.OEntityWrapper;
 import io.personium.plugin.base.utils.PluginUtils;
@@ -57,7 +57,7 @@ public final class AuthUtils {
 
         // DC0 Ruby Code
         // Digest::SHA256.hexdigest(pw + "Password hash salt value")
-        String str2hash = passwd + PluginConfig.getAuthPasswordSalt();
+        String str2hash = passwd + PluginBaseConfig.getAuthPasswordSalt();
         try {
             MessageDigest md = MessageDigest.getInstance(MD_ALGORITHM);
             byte[] digestBytes = md.digest(str2hash.getBytes(CharEncoding.UTF_8));
@@ -72,26 +72,26 @@ public final class AuthUtils {
 
     /**
      * パスワードのバリデートチェックをする.
-     * @param dcCredHeader dcCredHeader
+     * @param CredHeader CredHeader
      * @param entitySetName entitySetName
      * @return Hash文字列化されたパスワード
      */
-    public static String checkValidatePassword(final String dcCredHeader, String entitySetName) {
+    public static String checkValidatePassword(final String CredHeader, String entitySetName) {
         if (Account.EDM_TYPE_NAME.equals(entitySetName)) {
-            if (dcCredHeader != null) {
-                if ((dcCredHeader.length() >= MIN_PASSWORD_LENGTH)
-                        && (dcCredHeader.length() <= MAX_PASSWORD_LENGTH)) {
+            if (CredHeader != null) {
+                if ((CredHeader.length() >= MIN_PASSWORD_LENGTH)
+                        && (CredHeader.length() <= MAX_PASSWORD_LENGTH)) {
                     String regex = "^[a-zA-Z0-9-_]{0,}$";
                     Pattern pattern = Pattern.compile(regex);
-                    Matcher m = pattern.matcher(dcCredHeader);
+                    Matcher m = pattern.matcher(CredHeader);
                     if (!m.find()) {
-                        throw PluginException.Auth.PASSWORD_INVALID;
+                        throw PluginBaseException.Auth.PASSWORD_INVALID;
                     }
                 } else {
-                    throw PluginException.Auth.PASSWORD_INVALID;
+                    throw PluginBaseException.Auth.PASSWORD_INVALID;
                 }
             }
-            String hPassStr = AuthUtils.hashPassword(dcCredHeader);
+            String hPassStr = AuthUtils.hashPassword(CredHeader);
             return hPassStr;
         }
         return null;
