@@ -16,7 +16,7 @@
  */
 package io.personium.plugin.base.utils;
 
-import io.personium.plugin.base.PluginBaseConfig;
+import io.personium.plugin.base.PluginConfig;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -53,8 +53,8 @@ public class ProxyUtils {
      * @return false/true boolean
      */
     public static boolean isProxyHost() {
-        String host = PluginBaseConfig.getProxyHostName();
-        int port = PluginBaseConfig.getProxyHostNumber();
+        String host = PluginConfig.getProxyHostName();
+        int port = PluginConfig.getProxyHostNumber();
         return isValid(host) && port > 0;
     }
 
@@ -64,12 +64,12 @@ public class ProxyUtils {
      */
     public static CloseableHttpClient proxyHttpClient() {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        String host = PluginBaseConfig.getProxyHostName();
-        int port = PluginBaseConfig.getProxyHostNumber();
+        String host = PluginConfig.getProxyHostName();
+        int port = PluginConfig.getProxyHostNumber();
 
         if (isValid(host) && port > 0) {
-            String user = PluginBaseConfig.getProxyUserName();
-            String pswd = PluginBaseConfig.getProxyPassword();
+            String user = PluginConfig.getProxyUserName();
+            String pswd = PluginConfig.getProxyPassword();
             if (isValid(user) && isValid(pswd)) {
                 credsProvider.setCredentials(
                         new AuthScope(host, port),
@@ -89,8 +89,8 @@ public class ProxyUtils {
      */
     public static RequestConfig getRequestConfig() {
         RequestConfig config = null;
-        String host = PluginBaseConfig.getProxyHostName();
-        int port = PluginBaseConfig.getProxyHostNumber();
+        String host = PluginConfig.getProxyHostName();
+        int port = PluginConfig.getProxyHostNumber();
         if (isValid(host) && port > 0) {
             HttpHost proxy = new HttpHost(host, port);
             config = RequestConfig.custom().setProxy(proxy).build();

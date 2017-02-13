@@ -227,12 +227,12 @@ public final class PluginUtils {
         /**
          * urn:x-dc1:xmlns.
          */
-        public static final String NS_DC1 = "urn:x-dc1:xmlns";
+        public static final String NS_PERSONIUM = "urn:x-personium:xmlns";
 
         /**
-         * dc.
+         * personium.
          */
-        public static final String NS_PREFIX_DC1 = "dc";
+        public static final String NS_PREFIX_PERSONIUM = "personium";
 
     }
 

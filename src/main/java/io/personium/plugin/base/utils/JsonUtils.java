@@ -30,7 +30,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.apache.http.impl.client.CloseableHttpClient;
 
-import io.personium.plugin.base.PluginBaseException;
+import io.personium.plugin.base.PluginException;
 import io.personium.plugin.base.utils.ProxyUtils;
 import io.personium.plugin.base.utils.PluginUtils;
 
@@ -46,19 +46,20 @@ public final class JsonUtils {
      * tokenToJSON.
      * @param token String
      * @return ret JSONObject
+     * @throws PluginException 
      */
-    public static JSONObject tokenToJSON(String token) {
+    public static JSONObject tokenToJSON(String token) throws PluginException {
         JSONObject ret = null;
         try {
             String decoded = new String(PluginUtils.decodeBase64Url(token), StandardCharsets.UTF_8);
             ret = (JSONObject) new JSONParser().parse(decoded);
         } catch (ParseException e) {
             // BASE64はOk.JSONのパースに失敗.
-        	throw PluginBaseException.OData.JSON_PARSE_ERROR.params("Header and payload should be Base64 encoded JSON.");
+            throw PluginException.Auth.JSON_PARSE_ERROR.params("Header and payload should be Base64 encoded JSON.");
 
         } catch (Exception e) {
             // BASE64が失敗.
-            throw PluginBaseException.Auth.IDTOKEN_ENCODED_INVALID.params("Header and payload should be Base64 encoded.");
+            throw PluginException.Auth.IDTOKEN_ENCODED_INVALID.params("Header and payload should be Base64 encoded.");
         }
         return ret;
     }
@@ -75,8 +76,9 @@ public final class JsonUtils {
      *
      * @param url URL
      * @return JSONObject
+     * @throws PluginException 
      */
-    public static JSONObject getHttpJSON(String url) {
+    public static JSONObject getHttpJSON(String url) throws PluginException {
         HttpGet get = new HttpGet(url);
         HttpResponse res = null;
         int status = 0;
@@ -96,13 +98,13 @@ public final class JsonUtils {
             return jsonObj;
         } catch (ClientProtocolException e) {
             // HTTPのプロトコル違反
-            throw PluginBaseException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status).reason(e);
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status).reason(e);
         } catch (IOException e) {
             // サーバーに接続できない場合に発生
-            throw PluginBaseException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url).reason(e);
+            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url).reason(e);
         } catch (ParseException e) {
             // JSONでないものを返してきた
-            throw PluginBaseException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status).reason(e);
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status).reason(e);
         }
     }
 }

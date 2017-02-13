@@ -16,20 +16,10 @@
  */
 package io.personium.plugin.base.auth;
 
-import io.personium.plugin.base.PluginBaseException;
+import io.personium.plugin.base.PluginException;
 import io.personium.plugin.base.PluginMessageUtils;
 import io.personium.plugin.base.PluginMessageUtils.Severity;
 import io.personium.plugin.base.auth.OAuth2Helper.Error;
-import io.personium.plugin.base.auth.OAuth2Helper.Key;
-import io.personium.plugin.base.auth.OAuth2Helper.Scheme;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
-import org.apache.http.HttpStatus;
-import org.json.simple.JSONObject;
 
 /**
  * AuthPluginException.
@@ -37,41 +27,12 @@ import org.json.simple.JSONObject;
  * @author fjqs
  */
 @SuppressWarnings("serial")
-public final class AuthPluginException extends PluginBaseException {
+public final class AuthPluginException extends PluginException {
 
     /**
      * Grant-Typeの値が異常.
      */
     public static final AuthPluginException UNSUPPORTED_GRANT_TYPE = create("PR400-AN-0001", Error.UNSUPPORTED_GRANT_TYPE);
-    /**
-     * personium_targetの値異常.
-     */
-    public static final AuthPluginException INVALID_TARGET = create("PR400-AN-0002", Error.INVALID_REQUEST);
-    /**
-     * Client Sercret パースエラー.
-     */
-    public static final AuthPluginException CLIENT_SERCRET_PARSE_ERROR = create("PR400-AN-0003", Error.INVALID_CLIENT);
-    /**
-     * Client Sercret 有効期限チェック.
-     */
-    public static final AuthPluginException CLIENT_SERCRET_EXPIRED = create("PR400-AN-0004", Error.INVALID_CLIENT);
-    /**
-     * Client Sercret 署名検証をエラー.
-     */
-    public static final AuthPluginException CLIENT_SERCRET_DSIG_INVALID = create("PR400-AN-0005", Error.INVALID_CLIENT);
-    /**
-     * Client Sercret のIssuerがIDと等しくない.
-     */
-    public static final AuthPluginException CLIENT_SERCRET_ISSUER_MISMATCH = create("PR400-AN-0006", Error.INVALID_CLIENT);
-    /**
-     * Client Sercret のターゲットが自分でない.
-     */
-    public static final AuthPluginException CLIENT_SERCRET_TARGET_WRONG = create("PR400-AN-0007", Error.INVALID_CLIENT);
-
-    /**
-     * トランスセルトークン認証ではユニットユーザ昇格はできない.
-     */
-    public static final AuthPluginException TC_ACCESS_REPRESENTING_OWNER = create("PR400-AN-0008", Error.INVALID_GRANT);
     /**
      * トークンパースエラー.
      */
@@ -84,40 +45,12 @@ public final class AuthPluginException extends PluginBaseException {
      * 署名検証をエラー.
      */
     public static final AuthPluginException TOKEN_DSIG_INVALID = create("PR400-AN-0011", Error.INVALID_GRANT);
-    /**
-     * トークン のターゲットが自分でない.
-     * {0}:トークンのターゲットURL
-     */
-    public static final AuthPluginException TOKEN_TARGET_WRONG = create("PR400-AN-0012", Error.INVALID_GRANT);
-    /**
-     * リフレッシュトークンでない.
-     */
-    public static final AuthPluginException NOT_REFRESH_TOKEN = create("PR400-AN-0013", Error.INVALID_GRANT);
-    /**
-     * 権限がないから昇格できない.
-     */
-    public static final AuthPluginException NOT_ALLOWED_REPRESENT_OWNER = create("PR400-AN-0014", Error.INVALID_GRANT);
-    /**
-     * オーナーがいないセルは昇格できない.
-     */
-    public static final AuthPluginException NO_CELL_OWNER = create("PR400-AN-0015", Error.INVALID_GRANT);
+
     /**
      * 必須パラメータが無い.
      * {0}:パラメータキー名
      */
     public static final AuthPluginException REQUIRED_PARAM_MISSING = create("PR400-AN-0016", Error.INVALID_REQUEST);
-    /**
-     * 認証エラー.
-     */
-    public static final AuthPluginException AUTHN_FAILED = create("PR400-AN-0017", Error.INVALID_GRANT);
-    /**
-     * 認証ヘッダの指定誤り.
-     */
-    public static final AuthPluginException AUTH_HEADER_IS_INVALID = create("PR400-AN-0018", Error.INVALID_CLIENT);
-    /**
-     * Accountロック中.
-     */
-    public static final AuthPluginException ACCOUNT_LOCK_ERROR = create("PR400-AN-0019", Error.INVALID_GRANT);
     /**
      * IDTokenの検証の中で、受け取ったIdTokenのAudienceが信頼するClientIDのリストに無かった.
      */
@@ -140,6 +73,11 @@ public final class AuthPluginException extends PluginBaseException {
      */
     public static final AuthPluginException OIDC_UNEXPECTED_VALUE = create("PR400-AN-0034", Error.INVALID_GRANT);
 
+    /**
+     * 公開鍵の形式ｉ異常を返却.
+     */
+    public static final AuthPluginException OIDC_INVALID_KEY = create("PR400-AN-0035", Error.INVALID_GRANT);
+    
     /**
      * インナークラスを強制的にロードする.
      */
@@ -179,37 +117,14 @@ public final class AuthPluginException extends PluginBaseException {
         return new AuthPluginException(this.code, this.severity, this.message, this.status, this.error, realm2set);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Response createResponse() {
-        JSONObject errorJson = new JSONObject();
-
-        errorJson.put(Key.ERROR, this.error);
-
-        String errDesc = String.format("[%s] - %s", this.code, this.message);
-        errorJson.put(Key.ERROR_DESCRIPTION, errDesc);
-
-        int statusCode = parseCode(this.code);
-        ResponseBuilder rb = Response.status(statusCode)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .entity(errorJson.toJSONString());
-
-        // レルム値が設定されていれば、WWW-Authenticateヘッダーを返却する。
-        // __authエンドポイントでは、認証失敗時(401返却時)には、同ヘッダーに Auth SchemeがBasicの値を返却するため、ここでは固定値とする。
-        if (this.realm != null && statusCode == HttpStatus.SC_UNAUTHORIZED) {
-            rb = rb.header(HttpHeaders.WWW_AUTHENTICATE, Scheme.BASIC + " realm=\"" + this.realm + "\"");
-        }
-        return rb.build();
-    }
-
     /**
      * 原因例外を追加したものを作成して返します.
      * @param t 原因例外
-     * @return PluginBaseException
+     * @return PluginException
      */
-    public PluginBaseException reason(final Throwable t) {
+    public PluginException reason(final Throwable t) {
         // クローンを作成して
-        PluginBaseException ret = new AuthPluginException(
+        PluginException ret = new AuthPluginException(
                 this.code, this.severity, this.message, this.status, this.error, this.realm);
         // スタックトレースをセット
         ret.setStackTrace(t.getStackTrace());
@@ -218,12 +133,12 @@ public final class AuthPluginException extends PluginBaseException {
 
     /**
      * ファクトリーメソッド.
-     * @param code DCメッセージコード
+     * @param code メッセージコード
      * @param error OAuth2エラーコード
-     * @return PluginBaseException
+     * @return AuthPluginException
      */
     public static AuthPluginException create(String code, String error) {
-        int statusCode = PluginBaseException.parseCode(code);
+        int statusCode = PluginException.parseCode(code);
 
         // ログレベルの取得
         Severity severity = PluginMessageUtils.getSeverity(code);

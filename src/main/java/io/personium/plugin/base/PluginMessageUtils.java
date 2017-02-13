@@ -39,13 +39,13 @@ public abstract class PluginMessageUtils {
      * 後ろにメッセージコードをつけるのでドットまで定義
      * 例）io.personium.core.loglevel.PR400-OD-0001
      */
-    public static final String LOG_LEVEL = PluginBaseConfig.KEY_ROOT + "loglevel.";
+    public static final String LOG_LEVEL = PluginConfig.KEY_ROOT + "loglevel.";
 
     /**
      * ログメッセージ設定のキー.
      * 後ろにメッセージコードをつけるのでドットまで定義
      */
-    public static final String LOG_MESSAGE = PluginBaseConfig.KEY_ROOT + "msg.";
+    public static final String LOG_MESSAGE = PluginConfig.KEY_ROOT + "msg.";
 
     /**
      * ログレベルに対応する例外の深刻さ.
@@ -77,7 +77,7 @@ public abstract class PluginMessageUtils {
     private static Properties doLoad(String file) {
         Properties prop = new Properties();
         prop.clear();
-        InputStream is = PluginBaseConfig.class.getClassLoader().getResourceAsStream(file);
+        InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream(file);
         try {
             prop.load(is);
         } catch (IOException e) {

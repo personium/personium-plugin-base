@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 設定情報を保持するクラス. このクラスからクラスパス上にある personium-unit-config.propertiesの内容にアクセスできます。
  */
-public class PluginBaseConfig {
+public class PluginConfig {
     private static final int DEFAULT_BATCH_TIMEOUT = 270000;
     private static final int DEFAULT_BATCH_SLEEP_INTERVAL = 1000;
     private static final int DEFAULT_BATCH_SLEEP = 50;
@@ -699,14 +699,14 @@ public class PluginBaseConfig {
 
     static {
         // 各種メッセージ出力クラスを強制的にロードする
-        PluginBaseLog.loadConfig();
-        PluginBaseException.loadConfig();
+        PluginLog.loadConfig();
+        PluginException.loadConfig();
     }
 
     /**
      * singleton.
      */
-    private static PluginBaseConfig singleton = new PluginBaseConfig();
+    private static PluginConfig singleton = new PluginConfig();
 
     // static Logger log = LoggerFactory.getLogger(PersoniumCoreConfig.class);
 
@@ -723,7 +723,7 @@ public class PluginBaseConfig {
     /**
      * protectedなコンストラクタ.
      */
-    protected PluginBaseConfig() {
+    protected PluginConfig() {
         this.doReload();
     }
 
@@ -731,7 +731,7 @@ public class PluginBaseConfig {
      * 設定のリロード.
      */
     private synchronized void doReload() {
-        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginConfig.class);
         Properties properties = getUnitConfigDefaultProperties();
         Properties propertiesOverride = getPersoniumConfigProperties();
         // 読み込みに成功した場合、メンバ変数へ置換する
@@ -791,7 +791,7 @@ public class PluginBaseConfig {
      */
     protected Properties getUnitConfigDefaultProperties() {
         Properties properties = new Properties();
-        InputStream is = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config-default.properties");
+        InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config-default.properties");
         try {
             properties.load(is);
         } catch (IOException e) {
@@ -811,7 +811,7 @@ public class PluginBaseConfig {
      * @return personium-unit-config.properties
      */
     protected Properties getPersoniumConfigProperties() {
-        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginConfig.class);
         Properties propertiesOverride = new Properties();
         String configFilePath = System.getProperty(KEY_CONFIG_FILE);
         InputStream is = getConfigFileInputStream(configFilePath);
@@ -842,10 +842,10 @@ public class PluginBaseConfig {
      */
     @SuppressWarnings("resource")
 	protected InputStream getConfigFileInputStream(String configFilePath) {
-        Logger log = LoggerFactory.getLogger(PluginBaseConfig.class);
+        Logger log = LoggerFactory.getLogger(PluginConfig.class);
         InputStream configFileInputStream = null;
         if (configFilePath == null) {
-            configFileInputStream = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
+            configFileInputStream = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
             return configFileInputStream;
         }
 
@@ -856,7 +856,7 @@ public class PluginBaseConfig {
             log.info("personium-unit-config.properties from system properties.");
         } catch (FileNotFoundException e) {
             // 指定されたパスにファイルが存在しない場合は、クラスパス上のファイルを読み込む
-            configFileInputStream = PluginBaseConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
+            configFileInputStream = PluginConfig.class.getClassLoader().getResourceAsStream("personium-unit-config.properties");
             log.info("personium-unit-config.properties from class path.");
         }
         return configFileInputStream;
@@ -1576,7 +1576,7 @@ public class PluginBaseConfig {
      * @return boolean httpsの場合:true
      */
     public static boolean isHttps() {
-        return PluginBaseConfig.getUnitScheme().equals("https");
+        return PluginConfig.getUnitScheme().equals("https");
     }
 
     /**
