@@ -16,241 +16,39 @@
  */
 package io.personium.plugin.base.utils;
 
+import io.personium.plugin.base.PluginException;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.cache.CachingHttpClient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
 
 /**
- * 各種ユーティリティ関数を集めたクラス.
- */
-/**
- * @author shimono
+ * Pluginを作成する人が使用したいであろう各種ユーティリティ関数を集めたクラス.
  */
 public final class PluginUtils {
 
-    /**
-     * ログ.
-     */
     static Logger log = LoggerFactory.getLogger(PluginUtils.class);
 
     private PluginUtils() {
-    }
-
-    /**
-     * 独自のHttpヘッダを定数としてこの下に定義します.
-     */
-    public static class HttpHeaders {
-        /**
-         * Accountのパスワード設定・変更を受け付けるヘッダ.
-         */
-        public static final String X_DC_CREDENTIAL = "X-Dc-Credential";
-        /**
-         * X-Dc-Unit-Userヘッダ.
-         * MasterTokenでのアクセス時に、このヘッダがある場合は、
-         * ヘッダ値で指定された任意のユニットユーザとして振る舞う。
-         */
-        public static final String X_DC_UNIT_USER = "X-Dc-Unit-User";
-        /**
-         * Depthヘッダ.
-         */
-        public static final String DEPTH = "Depth";
-        /**
-         * X-HTTP-Method-Overrideヘッダ.
-         */
-        public static final String X_HTTP_METHOD_OVERRIDE = "X-HTTP-Method-Override";
-        /**
-         * X-Overrideヘッダ.
-         */
-        public static final String X_OVERRIDE = "X-Override";
-        /**
-         * X-Forwarded-Protoヘッダ.
-         */
-        public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
-        /**
-         * X-Forwarded-Hostヘッダ.
-         */
-        public static final String X_FORWARDED_HOST = "X-Forwarded-Host";
-        /**
-         * X-Forwarded-Pathヘッダ.
-         */
-        public static final String X_FORWARDED_PATH = "X-Forwarded-Path";
-        /**
-         * X-Dc-Unit-Hostヘッダ.
-         */
-        public static final String X_DC_UNIT_HOST = "X-Dc-Unit-Host";
-        /**
-         * X-Dc-Versionヘッダ.
-         */
-        public static final String X_DC_VERSION = "X-Dc-Version";
-        /**
-         * X-Dc-Recursiveヘッダ.
-         */
-        public static final String X_DC_RECURSIVE = "X-Dc-Recursive";
-        /**
-         * X-Dc-RequestKeyヘッダ.
-         */
-        public static final String X_DC_REQUESTKEY = "X-Dc-RequestKey";
-        /**
-         * Access-Control-Allow-Originヘッダ.
-         */
-        public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-        /**
-         * Access-Control-Allow-Headersヘッダ.
-         */
-        public static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
-        /**
-         * Access-Control-Request-Headersヘッダ.
-         */
-        public static final String ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
-        /**
-         * Access-Control-Allow-Methodsヘッダ.
-         */
-        public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
-        /**
-         * Originヘッダ.
-         */
-        public static final String ORIGIN = "Origin";
-        /**
-         * Allowヘッダ.
-         */
-        public static final String ALLOW = "Allow";
-        /**
-         * Rangeヘッダ.
-         */
-        public static final String RANGE = "Range";
-        /**
-         * Accept-Rangeヘッダ.
-         */
-        public static final String ACCEPT_RANGES = "Accept-Ranges";
-        /**
-         * Content-Rangeヘッダ.
-         */
-        public static final String CONTENT_RANGE = "Content-Range";
-
-        /**
-         * 典型的なヘッダ値.
-         */
-        public static class Value {
-            /**
-             * *
-             */
-            public static final String ASTERISK = "*";
-        }
-    }
-
-    /**
-     * Httpメソッドを定数としてこの下に定義します.
-     */
-    public static class HttpMethod {
-        /**
-         * MERGE.
-         */
-        public static final String MERGE = "MERGE";
-        /**
-         * MKCOL.
-         */
-        public static final String MKCOL = "MKCOL";
-        /**
-         * PROPFIND.
-         */
-        public static final String PROPFIND = "PROPFIND";
-        /**
-         * PROPPATCH.
-         */
-        public static final String PROPPATCH = "PROPPATCH";
-        /**
-         * ACL.
-         */
-        public static final String ACL = "ACL";
-        /**
-         * COPY.
-         */
-        public static final String COPY = "COPY";
-        /**
-         * MOVE.
-         */
-        public static final String MOVE = "MOVE";
-        /**
-         * LOCK.
-         */
-        public static final String LOCK = "LOCK";
-        /**
-         * UNLOCK.
-         */
-        public static final String UNLOCK = "UNLOCK";
-    }
-
-    /**
-     * サービスコレクションタイプを定数としてこの下に定義します.
-     */
-    public static class XmlConst {
-        /**
-         * service.
-         */
-        public static final String SERVICE = "service";
-
-        /**
-         * odata.
-         */
-        public static final String ODATA = "odata";
-
-        /**
-         * urn:x-dc1:xmlns.
-         */
-        public static final String NS_PERSONIUM = "urn:x-personium:xmlns";
-
-        /**
-         * personium.
-         */
-        public static final String NS_PREFIX_PERSONIUM = "personium";
-
-    }
-
-    /**
-     * XMLのDOMノードを文字列に変換します.
-     * @param node 文字列化したいノード
-     * @return 変換結果の文字列
-     */
-    public static String nodeToString(final Node node) {
-        StringWriter sw = new StringWriter();
-        try {
-            Transformer t = TransformerFactory.newInstance().newTransformer();
-            t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            t.transform(new DOMSource(node), new StreamResult(sw));
-        } catch (TransformerException te) {
-            throw new RuntimeException("nodeToString Transformer Exception", te);
-        }
-        return sw.toString();
     }
 
     /**
@@ -350,7 +148,8 @@ public final class PluginUtils {
     static final int HEX_DIGIT_MASK = 0x0F;
 
     /**
-     * バイト列を16進数の文字列に変換する. TODO さすがにこんなのどこかにライブラリありそうだけど.
+     * バイト列を16進数の文字列に変換する.
+     * TODO さすがにこんなのどこかにライブラリありそうだけど.
      * @param input 入力バイト列
      * @return 16進数文字列
      */
@@ -433,221 +232,47 @@ public final class PluginUtils {
         return bodyString;
     }
 
-    private static final String AUTHZ_BASIC = "Basic ";
+    /**
+     * Cacheを効かせるため、ClientをStaticとする. たかだか限定されたURLのbodyを保存するのみであり、
+     * 最大キャッシュサイズはCacheConfigクラスで定義された16kbyte程度である. そのため、Staticで持つこととした.
+     */
+    private static HttpClient httpClient = new CachingHttpClient();
+    private static CloseableHttpClient httpProxyClient = ProxyUtils.proxyHttpClient();
 
     /**
-     * Authorizationヘッダの内容をBasic認証のものとしてパースする.
-     * @param authzHeaderValue Authorizationヘッダの内容
-     * @return id, pwの２要素の文字列配列、またはパース失敗時はnull
+     * HTTPでJSONオブジェクトを取得する処理. Cacheが利用可能であればその値を用いる.
+     *
+     * @param url URL
+     * @return JSONObject
+     * @throws PluginException 
      */
-    public static String[] parseBasicAuthzHeader(String authzHeaderValue) {
-        if (authzHeaderValue == null || !authzHeaderValue.startsWith(AUTHZ_BASIC)) {
-            return null;
-        }
+    public static JSONObject getHttpJSON(String url) throws PluginException {
+        HttpGet get = new HttpGet(url);
+        HttpResponse res = null;
+        String status = null;
         try {
-            // 認証スキーマ以外の部分を取得
-            byte[] bytes = PluginUtils.decodeBase64Url(authzHeaderValue.substring(AUTHZ_BASIC.length()));
-            String rawStr = new String(bytes, CharEncoding.UTF_8);
-            int pos = rawStr.indexOf(":");
-            // 認証トークンの値に「:」を含んでいない場合は認証エラーとする
-            if (pos == -1) {
-                return null;
-            }
-            String username = rawStr.substring(0, pos);
-            String password = rawStr.substring(pos + 1);
-            return new String[] {decodeUrlComp(username), decodeUrlComp(password) };
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
-    }
-
-    /**
-     * basic認証ヘッダを生成して返します.
-     * @param id id
-     * @param pw pw
-     * @return basic認証のヘッダ
-     */
-    public static String createBasicAuthzHeader(final String id, final String pw) {
-        String line = encodeUrlComp(id) + ":" + encodeUrlComp(pw);
-        try {
-            return encodeBase64Url(line.getBytes(CharEncoding.UTF_8));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 任意のBaseUriをもつUriInfoオブジェクトを生成して返します.
-     * @param uriInfo UriInfo
-     * @param baseLevelsAbove BaseUriをRequestUriから何階層上にするか
-     * @return UriInfo
-     */
-    public static UriInfo createUriInfo(final UriInfo uriInfo, final int baseLevelsAbove) {
-        PersoniumUriInfo ret = new PersoniumUriInfo(uriInfo, baseLevelsAbove, null);
-        return ret;
-    }
-
-    /**
-     * 任意のBaseUriをもつUriInfoオブジェクトを生成して返します.
-     * @param uriInfo UriInfo
-     * @param baseLevelsAbove BaseUriをRequestUriから何階層上にするか
-     * @param add 追加パス情報
-     * @return UriInfo
-     */
-    public static UriInfo createUriInfo(final UriInfo uriInfo, final int baseLevelsAbove, final String add) {
-        PersoniumUriInfo ret = new PersoniumUriInfo(uriInfo, baseLevelsAbove, add);
-        return ret;
-    }
-
-    static final int CHARS_PREFIX_ODATA_DATE = 7;
-    static final int CHARS_SUFFIX_ODATA_DATE = 3;
-
-    /**
-     * ODataのDatetime JSONリテラル(Date(\/ ... \/) 形式)を解釈してDateオブジェクトに変換します.
-     * @param odataDatetime ODataのDatetime JSONリテラル
-     * @return Dateオブジェクト
-     */
-    public static Date parseODataDatetime(final String odataDatetime) {
-        String dateValue = odataDatetime
-                .substring(CHARS_PREFIX_ODATA_DATE, odataDatetime.length() - CHARS_SUFFIX_ODATA_DATE);
-        return new Date(Long.valueOf(dateValue));
-    }
-
-    /**
-     * OPTIONSメソッドに対する正常応答につかうResponseBuilderを作って返します.
-     * @param allowedMethods 許可されるHTTPメソッド文字列.
-     * @return ResponseBuilder
-     */
-    public static ResponseBuilder responseBuilderForOptions(String... allowedMethods) {
-        StringBuilder allowedMethodsBuilder = new StringBuilder(javax.ws.rs.HttpMethod.OPTIONS);
-        if (allowedMethods != null && allowedMethods.length > 0) {
-            allowedMethodsBuilder.append(", ");
-            allowedMethodsBuilder.append(StringUtils.join(allowedMethods, ", "));
-        }
-        return Response.ok().header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, allowedMethodsBuilder.toString())
-                .header(HttpHeaders.ALLOW, allowedMethodsBuilder.toString());
-    }
-
-    /**
-     * 指定階層上のパスをBaseUri(ルート)とするUriInfoとして振る舞うUriInfoのWrapper.
-     */
-    public static final class PersoniumUriInfo implements UriInfo {
-        UriBuilder baseUriBuilder;
-        UriInfo core;
-
-        /**
-         * Constructor.
-         * @param uriInfo UriInfo
-         * @param baseLevelsAbove 何階層上のパスをルートとするか
-         * @param add 追加パス情報
-         */
-        public PersoniumUriInfo(final UriInfo uriInfo, final int baseLevelsAbove, final String add) {
-            this.core = uriInfo;
-            String reqUrl = uriInfo.getRequestUri().toASCIIString();
-            if (reqUrl.endsWith("/")) {
-                reqUrl = reqUrl.substring(0, reqUrl.length() - 1);
-            }
-            String[] urlSplitted = reqUrl.split("/");
-            urlSplitted = (String[]) ArrayUtils.subarray(urlSplitted, 0, urlSplitted.length - baseLevelsAbove);
-            reqUrl = StringUtils.join(urlSplitted, "/") + "/";
-            if (add != null && add.length() != 0) {
-                reqUrl = reqUrl + add + "/";
-            }
-            this.baseUriBuilder = UriBuilder.fromUri(reqUrl);
-        }
-
-        @Override
-        public String getPath() {
-            return this.getPath(true);
-        }
-
-        @Override
-        public String getPath(final boolean decode) {
-            String sReq = null;
-            String sBas = null;
-            if (decode) {
-                sReq = this.getRequestUri().toString();
-                sBas = this.getBaseUri().toString();
+            // Connection Host
+            if (ProxyUtils.isProxyHost()) {
+                get.setConfig(ProxyUtils.getRequestConfig());
+                res = httpProxyClient.execute(get);
             } else {
-                sReq = this.getRequestUri().toASCIIString();
-                sBas = this.getBaseUri().toASCIIString();
+                res = httpClient.execute(get);
             }
-            return sReq.substring(sBas.length());
-        }
 
-        @Override
-        public List<PathSegment> getPathSegments() {
-            return this.core.getPathSegments();
-        }
-
-        @Override
-        public List<PathSegment> getPathSegments(final boolean decode) {
-            return this.core.getPathSegments(decode);
-        }
-
-        @Override
-        public URI getRequestUri() {
-            return this.core.getRequestUri();
-        }
-
-        @Override
-        public UriBuilder getRequestUriBuilder() {
-            return this.core.getRequestUriBuilder();
-        }
-
-        @Override
-        public URI getAbsolutePath() {
-            return this.core.getAbsolutePath();
-        }
-
-        @Override
-        public UriBuilder getAbsolutePathBuilder() {
-            return this.core.getAbsolutePathBuilder();
-        }
-
-        @Override
-        public URI getBaseUri() {
-            return this.baseUriBuilder.build();
-        }
-
-        @Override
-        public UriBuilder getBaseUriBuilder() {
-            return this.baseUriBuilder;
-        }
-
-        @Override
-        public MultivaluedMap<String, String> getPathParameters() {
-            return this.core.getPathParameters();
-        }
-
-        @Override
-        public MultivaluedMap<String, String> getPathParameters(final boolean decode) {
-            return this.core.getPathParameters(decode);
-        }
-
-        @Override
-        public MultivaluedMap<String, String> getQueryParameters() {
-            return this.core.getQueryParameters();
-        }
-
-        @Override
-        public MultivaluedMap<String, String> getQueryParameters(final boolean decode) {
-            return this.core.getQueryParameters(decode);
-        }
-
-        @Override
-        public List<String> getMatchedURIs() {
-            return this.core.getMatchedURIs();
-        }
-
-        @Override
-        public List<String> getMatchedURIs(final boolean decode) {
-            return this.core.getMatchedURIs(decode);
-        }
-
-        @Override
-        public List<Object> getMatchedResources() {
-            return this.core.getMatchedResources();
+            InputStream is = res.getEntity().getContent();
+            status = String.valueOf(res.getStatusLine().getStatusCode());
+            String body = PluginUtils.readInputStreamAsString(is);
+            JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
+            return jsonObj;
+        } catch (ClientProtocolException e) {
+            // HTTPのプロトコル違反
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status).reason(e);
+        } catch (IOException e) {
+            // サーバーに接続できない場合に発生
+            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url).reason(e);
+        } catch (ParseException e) {
+            // JSONでないものを返してきた
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status).reason(e);
         }
     }
 }

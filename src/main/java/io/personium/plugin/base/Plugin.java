@@ -18,7 +18,6 @@ package io.personium.plugin.base;
 
 /**
  * Plugin Interface.
- * @author coe
  *
  */
 public interface Plugin {

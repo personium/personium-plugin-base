@@ -23,7 +23,6 @@ import java.util.Map;
 
 /**
  * AuthPlugin.
- * @author coe
  *
  */
 public interface AuthPlugin extends Plugin {
@@ -39,5 +38,5 @@ public interface AuthPlugin extends Plugin {
      * @return pr PluginResult
      * @throws PluginException
      */
-    AuthenticatedIdentity authenticate(Map<String, String> body) throws PluginException;
+    AuthenticatedIdentity authenticate(Map<String, String> body) throws AuthPluginException;
 }

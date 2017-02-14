@@ -18,7 +18,6 @@ package io.personium.plugin.base.auth;
 
 /**
  * Auth Constants.
- * @author fjqs
  *
  */
 public final class AuthConst {
@@ -33,8 +32,8 @@ public final class AuthConst {
     public static final String KEY_ACCOUT = "accountName";
     /** oidc. **/
     public static final String KEY_OIDC_TYPE = "oidc";
-    /** message. **/
-    public static final String KEY_MESSAGE = "message";
+    /** customMessage. **/
+    public static final String KEY_MESSAGE = "customMessage";
 
     /**
      * Can not instantiate.

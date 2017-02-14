@@ -18,21 +18,35 @@
 package io.personium.plugin.base;
 
 import io.personium.plugin.base.PluginMessageUtils.Severity;
-import io.personium.plugin.base.utils.EscapeControlCode;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.HttpStatus;
 
 /**
  * ログメッセージ作成クラス.
  */
 @SuppressWarnings("serial")
 public class PluginException extends Exception {
+
+	private static final int PLUGIN_TYPE_NETWORK_ERROR = 11;
+	private static final int PLUGIN_TYPE_HTTP_REQUEST_FAILED = 12;
+	private static final int PLUGIN_TYPE_UNEXPECTED_RESPONSE = 13;
+	private static final int PLUGIN_TYPE_UNEXPECTED_VALUE = 14;
+
+	private static final int PLUGIN_TYPE_PASSWORD_INVALID = 21;
+	private static final int PLUGIN_TYPE_REQUEST_PARAM_INVALID = 22;
+	private static final int PLUGIN_TYPE_DC_CREDENTIAL_REQUIRED = 23;
+	private static final int PLUGIN_TYPE_UNITUSER_ACCESS_REQUIRED = 24;
+	private static final int PLUGIN_TYPE_NECESSARY_PRIVILEGE_LACKING = 25;
+	private static final int PLUGIN_TYPE_NOT_YOURS = 26;
+	private static final int PLUGIN_TYPE_SCHEMA_AUTH_REQUIRED = 27;
+	private static final int PLUGIN_TYPE_SCHEMA_MISMATCH = 28;
+	private static final int PLUGIN_TYPE_INSUFFICIENT_SCHEMA_AUTHZ_LEVEL = 29;
+	private static final int PLUGIN_TYPE_ROOT_CA_CRT_SETTING_ERROR = 30;
+	private static final int PLUGIN_TYPE_REQUEST_PARAM_CLIENTID_INVALID = 31;
+	private static final int PLUGIN_TYPE_REQUEST_PARAM_REDIRECT_INVALID = 32;
+	private static final int PLUGIN_TYPE_IDTOKEN_ENCODED_INVALID = 33;
+	private static final int PLUGIN_TYPE_JSON_PARSE_ERROR = 34;
 
     /**
      * NetWork関連エラー.
@@ -41,19 +55,19 @@ public class PluginException extends Exception {
         /**
          * NetWork関連エラー.
          */
-        public static final PluginException NETWORK_ERROR = create("PR500-NW-0000");
+        public static final PluginException NETWORK_ERROR = new PluginException(PLUGIN_TYPE_NETWORK_ERROR);
         /**
          * HTTPリクエストに失敗.
          */
-        public static final PluginException HTTP_REQUEST_FAILED = create("PR500-NW-0001");
+        public static final PluginException HTTP_REQUEST_FAILED = new PluginException(PLUGIN_TYPE_HTTP_REQUEST_FAILED);
         /**
          * 接続先が想定外の応答を返却.
          */
-        public static final PluginException UNEXPECTED_RESPONSE = create("PR500-NW-0002");
+        public static final PluginException UNEXPECTED_RESPONSE = new PluginException(PLUGIN_TYPE_UNEXPECTED_RESPONSE);
         /**
          * 接続先が想定外の値を返却.
          */
-        public static final PluginException UNEXPECTED_VALUE = create("PR500-NW-0003");
+        public static final PluginException UNEXPECTED_VALUE = new PluginException(PLUGIN_TYPE_UNEXPECTED_VALUE);
     }
 
     /**
@@ -63,69 +77,84 @@ public class PluginException extends Exception {
         /**
          * パスワード文字列が不正.
          */
-        public static final PluginException PASSWORD_INVALID = create("PR400-AU-0001");
+        public static final PluginException PASSWORD_INVALID = new PluginException(PLUGIN_TYPE_PASSWORD_INVALID);
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_INVALID = create("PR400-AU-0002");
+        public static final PluginException REQUEST_PARAM_INVALID = new PluginException(PLUGIN_TYPE_REQUEST_PARAM_INVALID);
         /**
          * パスワード文字列が不正.
          */
-        public static final PluginException DC_CREDENTIAL_REQUIRED = create("PR400-AU-0003");
+        public static final PluginException DC_CREDENTIAL_REQUIRED = new PluginException(PLUGIN_TYPE_DC_CREDENTIAL_REQUIRED);
 
         /**
          * ユニットユーザアクセスではない.
          */
-        public static final PluginException UNITUSER_ACCESS_REQUIRED = create("PR403-AU-0001");
+        public static final PluginException UNITUSER_ACCESS_REQUIRED = new PluginException(PLUGIN_TYPE_UNITUSER_ACCESS_REQUIRED);
         /**
          * 必要な権限が無い.
          */
-        public static final PluginException NECESSARY_PRIVILEGE_LACKING = create("PR403-AU-0002");
+        public static final PluginException NECESSARY_PRIVILEGE_LACKING = new PluginException(PLUGIN_TYPE_NECESSARY_PRIVILEGE_LACKING);
         /**
          * 認証ヘッダに指定されたユニットユーザではアクセセスできない.
          */
-        public static final PluginException NOT_YOURS = create("PR403-AU-0003");
+        public static final PluginException NOT_YOURS = new PluginException(PLUGIN_TYPE_NOT_YOURS);
         /**
          * スキーマ認証が必要.
          */
-        public static final PluginException SCHEMA_AUTH_REQUIRED = create("PR403-AU-0004");
+        public static final PluginException SCHEMA_AUTH_REQUIRED = new PluginException(PLUGIN_TYPE_SCHEMA_AUTH_REQUIRED);
         /**
          * このスキーマ認証ではアクセスできない.
          */
-        public static final PluginException SCHEMA_MISMATCH = create("PR403-AU-0005");
+        public static final PluginException SCHEMA_MISMATCH = new PluginException(PLUGIN_TYPE_SCHEMA_MISMATCH);
         /**
          * スキーマ認証レベルが不足.
          */
-        public static final PluginException INSUFFICIENT_SCHEMA_AUTHZ_LEVEL = create("PR403-AU-0006");
+        public static final PluginException INSUFFICIENT_SCHEMA_AUTHZ_LEVEL = new PluginException(PLUGIN_TYPE_INSUFFICIENT_SCHEMA_AUTHZ_LEVEL);
         /**
          * ルートCA証明書の設定エラー.
          */
-        public static final PluginException ROOT_CA_CRT_SETTING_ERROR = create("PR500-AN-0001");
+        public static final PluginException ROOT_CA_CRT_SETTING_ERROR = new PluginException(PLUGIN_TYPE_ROOT_CA_CRT_SETTING_ERROR);
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_CLIENTID_INVALID = create("PR400-AZ-0002");
+        public static final PluginException REQUEST_PARAM_CLIENTID_INVALID = new PluginException(PLUGIN_TYPE_REQUEST_PARAM_CLIENTID_INVALID);
         /**
          * リクエストパラメータが不正.
          */
-        public static final PluginException REQUEST_PARAM_REDIRECT_INVALID = create("PR400-AZ-0003");
+        public static final PluginException REQUEST_PARAM_REDIRECT_INVALID = new PluginException(PLUGIN_TYPE_REQUEST_PARAM_REDIRECT_INVALID);
         /**
          * IdTokenが不正.
          */
-        public static final PluginException IDTOKEN_ENCODED_INVALID = create("PR400-AZ-0004");
+        public static final PluginException IDTOKEN_ENCODED_INVALID = new PluginException(PLUGIN_TYPE_IDTOKEN_ENCODED_INVALID);
 
         /**
          * JSONのパースに失敗したとき.
          */
-        public static final PluginException JSON_PARSE_ERROR = create("PR400-OD-0001");
+        public static final PluginException JSON_PARSE_ERROR = new PluginException(PLUGIN_TYPE_JSON_PARSE_ERROR);
     }
+    
+    public String customErrorCode;
+    public Severity customSeverity;
+    public String customMessage;
+    public int customStatus;
 
-    public String code;
-    public Severity severity;
-    public String message;
-    public int status;
+    protected int type;
+    protected String[] params;
 
-    /**
+	public int getType() {
+		return type;
+	}
+
+	public String[] getParams() {
+		return params;
+	}
+
+	public void setParams(String[] params) {
+		this.params = params;
+	}
+
+	/**
      * インナークラスを強制的にロードする.
      * エラー分類のインナークラスが追加になったらここに追加すること.
      */
@@ -135,36 +164,44 @@ public class PluginException extends Exception {
     }
 
     /**
-     * コンストラクタ.
-     * @param status HTTPレスポンスステータス
-     * @param severityエラーレベル
-     * @param code エラーコード
-     * @param message エラーメッセージ
+     * constructor.
      */
-    PluginException(final String code,
-            final Severity severity,
-            final String message,
-            final int status,
-            final Throwable t) {
-        super(t);
-        this.code = code;
-        this.severity = severity;
-        this.message = message;
-        this.status = status;
+    protected PluginException(int type) {
+        super();
+        this.type = type;
     }
 
     /**
-     * コンストラクタ.
-     * @param status HTTPレスポンスステータス
+     * constructor.
+     * @param customStatus HTTPレスポンスステータス
      * @param severityエラーレベル
-     * @param code エラーコード
-     * @param message エラーメッセージ
+     * @param customErrorCode エラーコード
+     * @param customMessage エラーメッセージ
      */
-    protected PluginException(final String code,
-            final Severity severity,
-            final String message,
-            final int status) {
-        this(code, severity, message, status, null);
+    PluginException(final String customErrorCode,
+            final Severity customSeverity,
+            final String customMessage,
+            final int customStatus,
+            final Throwable t) {
+        super(t);
+        this.customErrorCode = customErrorCode;
+        this.customSeverity = customSeverity;
+        this.customMessage = customMessage;
+        this.customStatus = customStatus;
+    }
+
+    /**
+     * constructor.
+     * @param customStatus HTTPレスポンスステータス
+     * @param customSeverityエラーレベル
+     * @param customErrorCode エラーコード
+     * @param customMessage エラーメッセージ
+     */
+    protected PluginException(final String customErrorCode,
+            final Severity customSeverity,
+            final String customMessage,
+            final int customStatus) {
+        this(customErrorCode, customSeverity, customMessage, customStatus, null);
     }
 
     /**
@@ -172,7 +209,7 @@ public class PluginException extends Exception {
      * @return ログレベル
      */
     public Severity getSeverity() {
-        return this.severity;
+        return this.customSeverity;
     }
 
     /**
@@ -180,20 +217,20 @@ public class PluginException extends Exception {
      * @return HTTPステータスコード
      */
     public int getStatus() {
-        return this.status;
+        return this.customStatus;
     }
 
     /**
      * エラーコードを返却する.
      * @return エラーコード
      */
-    public String getCode() {
-        return this.code;
+    public String getCustomErrorCode() {
+        return this.customErrorCode;
     }
 
     @Override
     public String getMessage() {
-        return this.message;
+        return this.customMessage;
     }
 
     /**
@@ -203,7 +240,7 @@ public class PluginException extends Exception {
      */
     public PluginException reason(final Throwable t) {
         // クローンを作成
-        PluginException ret = new PluginException(this.code, this.severity, this.message, this.status, t);
+        PluginException ret = new PluginException(this.customErrorCode, this.customSeverity, this.customMessage, this.customStatus, t);
         return ret;
     }
 
@@ -212,70 +249,24 @@ public class PluginException extends Exception {
      * @param params 付加メッセージ
      * @return PluginException
      */
-    public PluginException params(final Object... params) {
-        // 置換メッセージ作成
-        String ms = MessageFormat.format(this.message, params);
-
-        // 制御コードのエスケープ処理
-        ms = EscapeControlCode.escape(ms);
-
+    public PluginException params(final String... params) {
         // メッセージ置換クローンを作成
-        PluginException ret = new PluginException(this.code, this.severity, ms, this.status);
+        PluginException ret = new PluginException(this.getType());
+        ret.setParams(params);
         return ret;
     }
 
     /**
-     * ファクトリーメソッド.
-     * @param code メッセージコード
-     * @return PluginException
-     */
-    public static PluginException create(String code) {
-        int statusCode = parseCode(code);
-
-        // ログレベルの取得
-        Severity severity = PluginMessageUtils.getSeverity(code);
-        if (severity == null) {
-            // ログレベルが設定されていなかったらレスポンスコードから自動的に判定する。
-            severity = decideSeverity(statusCode);
-        }
-
-        // ログメッセージの取得
-        String message = PluginMessageUtils.getMessage(code);
-
-        return new PluginException(code, severity, message, statusCode);
-    }
-
-    /**
-     * レスポンスコードからログレベルの判定.
-     * @param statusCode ステータスコード
-     * @return ステータスコードから判定されたログレベル
-     */
-    public static Severity decideSeverity(int statusCode) {
-        // 設定が省略されている場合はエラーコードからログレベルを取得
-        if (statusCode >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-            // 500系の場合はウォーニング（500以上はまとめてウォーニング）
-            return Severity.WARN;
-        } else if (statusCode >= HttpStatus.SC_BAD_REQUEST) {
-            // 400系の場合はインフォ
-            return Severity.INFO;
-        } else {
-            // それ以外の場合は考えられないのでウォーニング.
-            // 200系とか300系をPersoiumCoreExceptionで処理する場合はログレベル設定をちゃんと書きましょう.
-            return Severity.WARN;
-        }
-    }
-
-    /**
      * メッセージコードのパース.
-     * @param code メッセージコード
+     * @param customErrorCode メッセージコード
      * @return ステータスコードまたはログメッセージの場合は-1。
      */
-    public static int parseCode(String code) {
+    public static int parseCode(String customErrorCode) {
         Pattern p = Pattern.compile("^PR(\\d{3})-\\w{2}-\\d{4}$");
-        Matcher m = p.matcher(code);
+        Matcher m = p.matcher(customErrorCode);
         if (!m.matches()) {
             throw new IllegalArgumentException(
-                    "message code should be in \"PR000-OD-0000\" format. code=[" + code + "].");
+                    "customMessage code should be in \"PR000-OD-0000\" format. code=[" + customErrorCode + "].");
         }
         return Integer.parseInt(m.group(1));
     }
