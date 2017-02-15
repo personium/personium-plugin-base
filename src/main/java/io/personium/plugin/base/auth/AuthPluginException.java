@@ -163,8 +163,8 @@ public final class AuthPluginException extends PluginException {
     public static AuthPluginException conversion(final PluginException pe){
     	AuthPluginException ape = new AuthPluginException(pe.getType());
     	ape.setParams(pe.getParams());
-    	ape.reason(pe);
         ape.setStackTrace(pe.getStackTrace());
+//    	ape.reason(pe);
     	return ape;
     }
 }

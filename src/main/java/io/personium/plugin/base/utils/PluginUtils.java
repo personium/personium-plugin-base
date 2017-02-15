@@ -266,13 +266,13 @@ public final class PluginUtils {
             return jsonObj;
         } catch (ClientProtocolException e) {
             // HTTPのプロトコル違反
-            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status).reason(e);
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status);
         } catch (IOException e) {
             // サーバーに接続できない場合に発生
-            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url).reason(e);
+            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url);
         } catch (ParseException e) {
             // JSONでないものを返してきた
-            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status).reason(e);
+            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status);
         }
     }
 }
