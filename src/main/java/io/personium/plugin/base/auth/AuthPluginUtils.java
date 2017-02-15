@@ -46,11 +46,11 @@ public final class AuthPluginUtils {
             ret = (JSONObject) new JSONParser().parse(decoded);
         } catch (ParseException e) {
             // BASE64はOk.JSONのパースに失敗.
-            throw PluginException.Auth.JSON_PARSE_ERROR.params("Header and payload should be Base64 encoded JSON.");
+            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params("Header and payload should be Base64 encoded JSON.");
 
         } catch (Exception e) {
             // BASE64が失敗.
-            throw PluginException.Auth.IDTOKEN_ENCODED_INVALID.params("Header and payload should be Base64 encoded.");
+            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params("Header and payload should be Base64 encoded.");
         }
         return ret;
     }

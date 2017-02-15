@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * ログメッセージ作成クラス.
+ * Exception for Plug-ins.
  */
 @SuppressWarnings("serial")
 public class PluginException extends Exception {
@@ -35,7 +35,7 @@ public class PluginException extends Exception {
 
 	private static final int PLUGIN_TYPE_PASSWORD_INVALID = 21;
 	private static final int PLUGIN_TYPE_REQUEST_PARAM_INVALID = 22;
-	private static final int PLUGIN_TYPE_DC_CREDENTIAL_REQUIRED = 23;
+	private static final int PLUGIN_TYPE_P_CREDENTIAL_REQUIRED = 23;
 	private static final int PLUGIN_TYPE_UNITUSER_ACCESS_REQUIRED = 24;
 	private static final int PLUGIN_TYPE_NECESSARY_PRIVILEGE_LACKING = 25;
 	private static final int PLUGIN_TYPE_NOT_YOURS = 26;
@@ -48,10 +48,24 @@ public class PluginException extends Exception {
 	private static final int PLUGIN_TYPE_IDTOKEN_ENCODED_INVALID = 33;
 	private static final int PLUGIN_TYPE_JSON_PARSE_ERROR = 34;
 
+	private static final int PLUGIN_TYPE_UNSUPPORTED_GRANT_TYPE = 101;
+	private static final int PLUGIN_TYPE_TOKEN_PARSE_ERROR = 102;
+	private static final int PLUGIN_TYPE_TOKEN_EXPIRED = 103;
+	private static final int PLUGIN_TYPE_TOKEN_DSIG_INVALID = 104;
+	private static final int PLUGIN_TYPE_REQUIRED_PARAM_MISSING = 105;
+	private static final int PLUGIN_TYPE_OIDC_WRONG_AUDIENCE = 106;
+	private static final int PLUGIN_TYPE_OIDC_AUTHN_FAILED = 107;
+	private static final int PLUGIN_TYPE_OIDC_INVALID_ID_TOKEN = 108;
+	private static final int PLUGIN_TYPE_OIDC_EXPIRED_ID_TOKEN = 109;
+	private static final int PLUGIN_TYPE_OIDC_UNEXPECTED_VALUE = 110;
+	private static final int PLUGIN_TYPE_OIDC_INVALID_KEY = 111;
+
+	private static final int PLUGIN_TYPE_USER_DEFINED = 0;
+	
     /**
      * NetWork関連エラー.
      */
-    public static class NetWork {
+    public static class NetWork extends PluginException {
         /**
          * NetWork関連エラー.
          */
@@ -68,13 +82,44 @@ public class PluginException extends Exception {
          * 接続先が想定外の値を返却.
          */
         public static final PluginException UNEXPECTED_VALUE = new PluginException(PLUGIN_TYPE_UNEXPECTED_VALUE);
+
+        /**
+         * 
+         * @return
+         */
+        public static PluginException.NetWork create(
+        		final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	return new PluginException.NetWork(customErrorCode, customSeverity, customMessage, customStatus, oauthError, t);
+        }
+
+        public NetWork(final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	super(customErrorCode, customSeverity, customMessage, customStatus, t);
+        	this.oauthError = oauthError;
+        }
+
+        String oauthError;
+
+		public String getOAuthError() {
+			return oauthError;
+		}
     }
 
     /**
      * 認証系エラー.
      */
-    public static class Auth {
-        /**
+    public static class Auth extends PluginException {
+    	
+    	/**
          * パスワード文字列が不正.
          */
         public static final PluginException PASSWORD_INVALID = new PluginException(PLUGIN_TYPE_PASSWORD_INVALID);
@@ -85,7 +130,7 @@ public class PluginException extends Exception {
         /**
          * パスワード文字列が不正.
          */
-        public static final PluginException DC_CREDENTIAL_REQUIRED = new PluginException(PLUGIN_TYPE_DC_CREDENTIAL_REQUIRED);
+        public static final PluginException P_CREDENTIAL_REQUIRED = new PluginException(PLUGIN_TYPE_P_CREDENTIAL_REQUIRED);
 
         /**
          * ユニットユーザアクセスではない.
@@ -132,25 +177,139 @@ public class PluginException extends Exception {
          * JSONのパースに失敗したとき.
          */
         public static final PluginException JSON_PARSE_ERROR = new PluginException(PLUGIN_TYPE_JSON_PARSE_ERROR);
+ 
+        /**
+         * 
+         * @return
+         */
+        public static PluginException.Auth create(
+        		final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	return new PluginException.Auth(customErrorCode, customSeverity, customMessage, customStatus, oauthError, t);
+        }
+
+        public Auth(final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	super(customErrorCode, customSeverity, customMessage, customStatus, t);
+        	this.oauthError = oauthError;
+        }
+
+        String oauthError;
+
+		public String getOAuthError() {
+			return oauthError;
+		}
     }
-    
+
+    /**
+     * 認証系エラー.
+     */
+    public static class Authn extends PluginException {
+	    /**
+	     * Grant-Typeの値が異常.
+	     */
+	    public static final PluginException UNSUPPORTED_GRANT_TYPE = new PluginException(PLUGIN_TYPE_UNSUPPORTED_GRANT_TYPE);
+	    /**
+	     * トークンパースエラー.
+	     */
+	    public static final PluginException TOKEN_PARSE_ERROR = new PluginException(PLUGIN_TYPE_TOKEN_PARSE_ERROR);
+	    /**
+	     * 有効期限切れ.
+	     */
+	    public static final PluginException TOKEN_EXPIRED = new PluginException(PLUGIN_TYPE_TOKEN_EXPIRED);
+	    /**
+	     * 署名検証をエラー.
+	     */
+	    public static final PluginException TOKEN_DSIG_INVALID = new PluginException(PLUGIN_TYPE_TOKEN_DSIG_INVALID);
+	
+	    /**
+	     * 必須パラメータが無い.
+	     * {0}:パラメータキー名
+	     */
+	    public static final PluginException REQUIRED_PARAM_MISSING = new PluginException(PLUGIN_TYPE_REQUIRED_PARAM_MISSING);
+	    /**
+	     * IDTokenの検証の中で、受け取ったIdTokenのAudienceが信頼するClientIDのリストに無かった.
+	     */
+	    public static final PluginException OIDC_WRONG_AUDIENCE = new PluginException(PLUGIN_TYPE_OIDC_WRONG_AUDIENCE);
+	    /**
+	     * OIDCの認証エラー.
+	     */
+	    public static final PluginException OIDC_AUTHN_FAILED = new PluginException(PLUGIN_TYPE_OIDC_AUTHN_FAILED);
+	    /**
+	     * 無効なIDToken.
+	     */
+	    public static final PluginException OIDC_INVALID_ID_TOKEN = new PluginException(PLUGIN_TYPE_OIDC_INVALID_ID_TOKEN);
+	    /**
+	     * IDTokenの有効期限切れ.
+	     */
+	    public static final PluginException OIDC_EXPIRED_ID_TOKEN = new PluginException(PLUGIN_TYPE_OIDC_EXPIRED_ID_TOKEN);
+	
+	    /**
+	     * 接続先が想定外の値を返却.
+	     */
+	    public static final PluginException OIDC_UNEXPECTED_VALUE = new PluginException(PLUGIN_TYPE_OIDC_UNEXPECTED_VALUE);
+	
+	    /**
+	     * 公開鍵の形式ｉ異常を返却.
+	     */
+	    public static final PluginException OIDC_INVALID_KEY = new PluginException(PLUGIN_TYPE_OIDC_INVALID_KEY);
+
+        /**
+         * 
+         * @return
+         */
+        public static PluginException.Authn create(
+        		final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	return new PluginException.Authn(customErrorCode, customSeverity, customMessage, customStatus, oauthError, t);
+        }
+
+        public Authn(final String customErrorCode,
+                final Severity customSeverity,
+                final String customMessage,
+                final int customStatus,
+                final String oauthError,
+                final Throwable t) {
+        	super(customErrorCode, customSeverity, customMessage, customStatus, t);
+        	this.oauthError = oauthError;
+        }
+
+        String oauthError;
+
+		public String getOAuthError() {
+			return oauthError;
+		}
+    }
+
     public String customErrorCode;
     public Severity customSeverity;
     public String customMessage;
     public int customStatus;
 
     protected int type;
-    protected String[] params;
+    protected Object[] params;
 
 	public int getType() {
 		return type;
 	}
 
-	public String[] getParams() {
+	public Object[] getParams() {
 		return params;
 	}
 
-	public void setParams(String[] params) {
+	public void setParams(Object[] params) {
 		this.params = params;
 	}
 
@@ -159,14 +318,22 @@ public class PluginException extends Exception {
      * エラー分類のインナークラスが追加になったらここに追加すること.
      */
     public static void loadConfig() {
-        new Auth();
-        new NetWork();
+        new NetWork(null, null, null, 0, null, null);
+        new Auth(null, null, null, 0, null, null);
+        new Authn(null, null, null, 0, null, null);
     }
 
     /**
      * constructor.
      */
-    protected PluginException(int type) {
+    private PluginException() {
+        super();
+    }
+
+    /**
+     * constructor.
+     */
+    private PluginException(int type) {
         super();
         this.type = type;
     }
@@ -178,12 +345,13 @@ public class PluginException extends Exception {
      * @param customErrorCode エラーコード
      * @param customMessage エラーメッセージ
      */
-    PluginException(final String customErrorCode,
-            final Severity customSeverity,
-            final String customMessage,
-            final int customStatus,
-            final Throwable t) {
+    private PluginException(final String customErrorCode,
+		            final Severity customSeverity,
+		            final String customMessage,
+		            final int customStatus,
+		            final Throwable t) {
         super(t);
+        this.type = PLUGIN_TYPE_USER_DEFINED;
         this.customErrorCode = customErrorCode;
         this.customSeverity = customSeverity;
         this.customMessage = customMessage;
@@ -197,7 +365,7 @@ public class PluginException extends Exception {
      * @param customErrorCode エラーコード
      * @param customMessage エラーメッセージ
      */
-    protected PluginException(final String customErrorCode,
+    private PluginException(final String customErrorCode,
             final Severity customSeverity,
             final String customMessage,
             final int customStatus) {
@@ -231,6 +399,19 @@ public class PluginException extends Exception {
     @Override
     public String getMessage() {
         return this.customMessage;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public static PluginException create(
+    		final String customErrorCode,
+            final Severity customSeverity,
+            final String customMessage,
+            final int customStatus,
+            final Throwable t) {
+    	return new PluginException(customErrorCode, customSeverity, customMessage, customStatus, t);
     }
 
     /**
@@ -270,5 +451,4 @@ public class PluginException extends Exception {
         }
         return Integer.parseInt(m.group(1));
     }
-
 }

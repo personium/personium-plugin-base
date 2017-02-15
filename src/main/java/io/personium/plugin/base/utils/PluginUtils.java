@@ -269,7 +269,7 @@ public final class PluginUtils {
             throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status);
         } catch (IOException e) {
             // サーバーに接続できない場合に発生
-            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url);
+            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url, status);
         } catch (ParseException e) {
             // JSONでないものを返してきた
             throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status);
