@@ -32,8 +32,8 @@ public final class AuthConst {
     public static final String KEY_ACCOUT = "accountName";
     /** oidc. **/
     public static final String KEY_OIDC_TYPE = "oidc";
-    /** customMessage. **/
-    public static final String KEY_MESSAGE = "customMessage";
+    /** message. **/
+    public static final String KEY_MESSAGE = "message";
 
     /**
      * Can not instantiate.

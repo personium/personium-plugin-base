@@ -319,7 +319,7 @@ public final class PluginLog {
     /**
      * コンストラクタ.
      * @param severityエラーレベル
-     * @param customMessage エラーメッセージ
+     * @param message エラーメッセージ
      */
     PluginLog(final String code,
             final Severity severity,
