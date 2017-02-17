@@ -1315,7 +1315,11 @@ public class PluginConfig {
      * @return $proxyホスト番号.
      */
     public static int getProxyHostNumber() {
-        return Integer.parseInt(get(Proxy.PORT_NUMBER));
+    	String port = get(Proxy.PORT_NUMBER);
+    	if (port.length() > 0){
+    		return Integer.parseInt(get(Proxy.PORT_NUMBER));
+    	}
+        return 0;
     }
 
     /**
