@@ -237,7 +237,6 @@ public final class PluginUtils {
      * 最大キャッシュサイズはCacheConfigクラスで定義された16kbyte程度である. そのため、Staticで持つこととした.
      */
     private static HttpClient httpClient = new CachingHttpClient();
-    private static CloseableHttpClient httpProxyClient = ProxyUtils.proxyHttpClient();
 
     /**
      * HTTPでJSONオブジェクトを取得する処理. Cacheが利用可能であればその値を用いる.
@@ -250,9 +249,11 @@ public final class PluginUtils {
         HttpGet get = new HttpGet(url);
         HttpResponse res = null;
         String status = null;
+        CloseableHttpClient httpProxyClient = null;
         try {
             // Connection Host
             if (ProxyUtils.isProxyHost()) {
+                httpProxyClient = ProxyUtils.proxyHttpClient();
                 get.setConfig(ProxyUtils.getRequestConfig());
                 res = httpProxyClient.execute(get);
             } else {

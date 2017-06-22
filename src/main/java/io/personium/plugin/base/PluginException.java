@@ -61,7 +61,7 @@ public class PluginException extends Exception {
 	private static final int PLUGIN_TYPE_OIDC_INVALID_KEY = 111;
 
 	private static final int PLUGIN_TYPE_USER_DEFINED = 0;
-	
+
     /**
      * NetWork関連エラー.
      */
@@ -326,14 +326,14 @@ public class PluginException extends Exception {
     /**
      * constructor.
      */
-    private PluginException() {
+	private PluginException() {
         super();
     }
 
     /**
      * constructor.
      */
-    private PluginException(int type) {
+	private PluginException(int type) {
         super();
         this.type = type;
     }
