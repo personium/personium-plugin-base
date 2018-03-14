@@ -16,12 +16,12 @@
  */
 package io.personium.plugin.base;
 
-import io.personium.plugin.base.PluginMessageUtils.Severity;
-
 import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.personium.plugin.base.PluginMessageUtils.Severity;
 
 /**
  * ログメッセージ作成クラス.
@@ -386,7 +386,7 @@ public final class PluginLog {
      * ログの出力.
      * ログの出力時にログ出力元のクラス名、メソッド名、行数を表示する。
      * 出力例）
-     * 2012-09-09 11:23:47.029 [main] [INFO ] PluginLog [io.personium.core.PersoniumCoreLogTest#test:22] - JSON Parse Error.
+     * 2012-09-09 11:23:47.029 [main] [INFO ] PluginLog [io.personium.core.PersoniumCore#test:22] - JSON Parse Error.
      */
     public void writeLog() {
 

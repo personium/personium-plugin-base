@@ -36,12 +36,12 @@ public final class OAuth2Helper {
      */
     public static final String VERSION = "Draft 27";
 
-    
+
     /**
      * Name space.
      */
     public static final String NS_DC1 = "urn:x-dc1:xmlns";
-    
+
     /**
      * SAML Assertionを表すURN.
      */
