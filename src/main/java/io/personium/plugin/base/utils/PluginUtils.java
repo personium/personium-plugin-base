@@ -16,8 +16,6 @@
  */
 package io.personium.plugin.base.utils;
 
-import io.personium.plugin.base.PluginException;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,6 +38,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.personium.plugin.base.PluginException;
 
 /**
  * Pluginを作成する人が使用したいであろう各種ユーティリティ関数を集めたクラス.
@@ -243,7 +243,7 @@ public final class PluginUtils {
      *
      * @param url URL
      * @return JSONObject
-     * @throws PluginException 
+     * @throws PluginException PluginException
      */
     public static JSONObject getHttpJSON(String url) throws PluginException {
         HttpGet get = new HttpGet(url);

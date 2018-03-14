@@ -36,8 +36,8 @@ public final class AuthPluginUtils {
     /**
      * tokenToJSON.
      * @param token String
-     * @return ret JSONObject
-     * @throws PluginException 
+     * @return JSONObject
+     * @throws PluginException PluginException
      */
     public static JSONObject tokenToJSON(String token) throws PluginException {
         JSONObject ret = null;
@@ -46,7 +46,8 @@ public final class AuthPluginUtils {
             ret = (JSONObject) new JSONParser().parse(decoded);
         } catch (ParseException e) {
             // BASE64はOk.JSONのパースに失敗.
-            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params("Header and payload should be Base64 encoded JSON.");
+            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params(
+                    "Header and payload should be Base64 encoded JSON.");
 
         } catch (Exception e) {
             // BASE64が失敗.

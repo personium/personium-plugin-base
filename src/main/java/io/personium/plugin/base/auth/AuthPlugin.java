@@ -16,10 +16,10 @@
  */
 package io.personium.plugin.base.auth;
 
+import java.util.Map;
+
 import io.personium.plugin.base.Plugin;
 import io.personium.plugin.base.PluginException;
-
-import java.util.Map;
 
 /**
  * AuthPlugin.
@@ -35,8 +35,8 @@ public interface AuthPlugin extends Plugin {
     /**
      * authenticate.
      * @param body map
-     * @return pr PluginResult
-     * @throws PluginException
+     * @return PluginResult
+     * @throws PluginException PluginException
      */
     AuthenticatedIdentity authenticate(Map<String, String> body) throws PluginException;
 }
