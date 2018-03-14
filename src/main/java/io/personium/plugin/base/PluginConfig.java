@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -329,8 +330,8 @@ public class PluginConfig {
      */
     public static int getProxyHostNumber() {
         String port = get(Proxy.PORT_NUMBER);
-        if (port.length() > 0) {
-            return Integer.parseInt(get(Proxy.PORT_NUMBER));
+        if (StringUtils.isNotEmpty(port)) {
+            return Integer.parseInt(port);
         }
         return 0;
     }
