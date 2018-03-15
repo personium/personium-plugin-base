@@ -93,6 +93,33 @@ public class PluginConfig {
         public static final String USER_PSWD = KEY_ROOT + "proxy.pswd";
     }
 
+    /**
+     * OpenID Connect用の設定.
+     */
+    public static final class OIDC {
+        /**
+         * OpenID Connectにおいて、このユニットが信頼するClientIDを指定するためのキー.
+         */
+        public static final String OIDC = KEY_ROOT + "oidc.";
+
+        /**
+         * OpenID Connect TRUSTED_CLIENTIDS.
+         */
+        public static final String TRUSTED_CLIENTIDS = ".trustedClientIds";
+
+        /**
+         * 引数のClientIDがこのユニットが信頼するリストに含まれるかどうか判定する.
+         * @param provider String
+         * @param clientId ClientID
+         * @return boolean 含まれる場合：True
+         */
+        public static boolean isProviderClientIdTrusted(String provider, String clientId) {
+            String val = get(OIDC + provider + TRUSTED_CLIENTIDS);
+            //アスタリスクが指定されていたら無条件にtrue
+            return isAstarisk(val) || isSpaceSeparatedValueIncluded(val, clientId);
+        }
+    }
+
     static {
         // 各種メッセージ出力クラスを強制的にロードする
         PluginLog.loadConfig();
@@ -156,6 +183,28 @@ public class PluginConfig {
             log.debug("Overriding Config " + key + "=" + value);
             this.props.setProperty(key, value);
         }
+    }
+
+    private static boolean isSpaceSeparatedValueIncluded(String spaceSeparatedValue, String testValue) {
+        if (testValue == null || spaceSeparatedValue == null) {
+            return false;
+        }
+        String[] values = spaceSeparatedValue.split(" ");
+        for (String val : values) {
+            if (testValue.equals(val)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isAstarisk(String val) {
+        if (val == null) {
+            return false;
+        } else if ("*".equals(val)) {
+                return true;
+        }
+        return false;
     }
 
     /**
