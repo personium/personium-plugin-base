@@ -45,7 +45,7 @@ public class ProxyUtils {
      * @return boolean
      */
     public static boolean isValid(String str) {
-        return (str != null && str.trim().length() > 0);
+        return str != null && str.trim().length() > 0;
     }
 
     /**
