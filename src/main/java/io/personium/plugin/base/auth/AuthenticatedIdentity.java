@@ -16,49 +16,16 @@
  */
 package io.personium.plugin.base.auth;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Plugin Result.
+ * Auth plugin result.
  *
  */
 public class AuthenticatedIdentity {
-    /**
-     * Result Map.
-     */
-    Map<String, String> ai = new HashMap<String, String>();
 
-    /**
-     * Result Map.
-     */
+    /** Account name. */
     private String accountName;
-
-    /**
-     * Get Result.
-     * @return ai Map
-     */
-    public Map<String, String> getResult() {
-        return ai;
-    }
-
-    /**
-     * Get Attributes value.
-     * @param key String
-     * @return String
-     */
-    public String getAttributes(String key) {
-        return (String) ai.get(key);
-    }
-
-    /**
-     * Set Attributes key value.
-     * @param key String
-     * @param value String
-     */
-    public void setAttributes(String key, String value) {
-        ai.put(key, value);
-    }
+    /** Account type. */
+    private String accountType;
 
     /**
      * getAccountName.
@@ -70,9 +37,25 @@ public class AuthenticatedIdentity {
 
     /**
      * setAccountName.
-     * @param name String
+     * @param accountName String
      */
-    public void setAccountName(String name) {
-        this.accountName = name;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    /**
+     * getAccountType.
+     * @return accountName
+     */
+    public String getAccountType() {
+        return accountType;
+    }
+
+    /**
+     * setAccountType.
+     * @param accountType String
+     */
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }

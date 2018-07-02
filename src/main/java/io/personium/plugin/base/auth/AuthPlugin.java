@@ -16,6 +16,7 @@
  */
 package io.personium.plugin.base.auth;
 
+import java.util.List;
 import java.util.Map;
 
 import io.personium.plugin.base.Plugin;
@@ -27,10 +28,16 @@ import io.personium.plugin.base.PluginException;
  */
 public interface AuthPlugin extends Plugin {
     /**
-     * getGrantType.
-     * @return String
+     * Get GrantType.
+     * @return GrantType
      */
     String getGrantType();
+
+    /**
+     * Get AccountType.
+     * @return AccountType
+     */
+    String getAccountType();
 
     /**
      * authenticate.
@@ -38,5 +45,5 @@ public interface AuthPlugin extends Plugin {
      * @return PluginResult
      * @throws PluginException PluginException
      */
-    AuthenticatedIdentity authenticate(Map<String, String> body) throws PluginException;
+    AuthenticatedIdentity authenticate(Map<String, List<String>> body) throws PluginException;
 }

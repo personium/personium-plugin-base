@@ -24,10 +24,12 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -47,6 +49,9 @@ import io.personium.plugin.base.PluginException;
 public final class PluginUtils {
 
     static Logger log = LoggerFactory.getLogger(PluginUtils.class);
+
+    private static final String ERROR_MESSAGE_UNEXPECTED_RESPONSE = "Unexpected response from {0}, where {1} expected.";
+    private static final String ERROR_MESSAGE_HTTP_REQUEST_FAILED = "HTTP {0} request to {1} failed. Response code : {2}."; // CHECKSTYLE IGNORE
 
     private PluginUtils() {
     }
@@ -267,13 +272,16 @@ public final class PluginUtils {
             return jsonObj;
         } catch (ClientProtocolException e) {
             // HTTPのプロトコル違反
-            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "proper HTTP response", status);
+            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    MessageFormat.format(ERROR_MESSAGE_UNEXPECTED_RESPONSE, url, "proper HTTP response"));
         } catch (IOException e) {
             // サーバーに接続できない場合に発生
-            throw PluginException.NetWork.HTTP_REQUEST_FAILED.params(HttpGet.METHOD_NAME, url, status);
+            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    MessageFormat.format(ERROR_MESSAGE_HTTP_REQUEST_FAILED, HttpGet.METHOD_NAME, url, status));
         } catch (ParseException e) {
             // JSONでないものを返してきた
-            throw PluginException.NetWork.UNEXPECTED_RESPONSE.params(url, "JSON", status);
+            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    MessageFormat.format(ERROR_MESSAGE_UNEXPECTED_RESPONSE, url, "JSON"));
         }
     }
 }
