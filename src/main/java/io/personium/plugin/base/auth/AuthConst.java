@@ -23,17 +23,10 @@ package io.personium.plugin.base.auth;
 public final class AuthConst {
     /** plugin type **/
     /** Auth. **/
-    public static final String TYPE_AUTH = "auth";
+    public static final String PLUGIN_TYPE = "auth";
 
-    /** map key **/
-    /** set body   token. **/
-    public static final String KEY_TOKEN = "token";
-    /** get result email. **/
-    public static final String KEY_ACCOUT = "accountName";
     /** oidc. **/
     public static final String KEY_OIDC_TYPE = "oidc";
-    /** message. **/
-    public static final String KEY_MESSAGE = "message";
 
     /**
      * Can not instantiate.

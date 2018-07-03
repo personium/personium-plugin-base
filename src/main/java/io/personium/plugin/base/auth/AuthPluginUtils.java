@@ -22,7 +22,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import io.personium.plugin.base.PluginException;
 import io.personium.plugin.base.utils.PluginUtils;
 
 /**
@@ -37,22 +36,12 @@ public final class AuthPluginUtils {
      * tokenToJSON.
      * @param token String
      * @return JSONObject
-     * @throws PluginException PluginException
+     * @throws ParseException ParseException
      */
-    public static JSONObject tokenToJSON(String token) throws PluginException {
+    public static JSONObject tokenToJSON(String token) throws ParseException {
         JSONObject ret = null;
-        try {
-            String decoded = new String(PluginUtils.decodeBase64Url(token), StandardCharsets.UTF_8);
-            ret = (JSONObject) new JSONParser().parse(decoded);
-        } catch (ParseException e) {
-            // BASE64はOk.JSONのパースに失敗.
-            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params(
-                    "Header and payload should be Base64 encoded JSON.");
-
-        } catch (Exception e) {
-            // BASE64が失敗.
-            throw PluginException.Authn.OIDC_INVALID_ID_TOKEN.params("Header and payload should be Base64 encoded.");
-        }
+        String decoded = new String(PluginUtils.decodeBase64Url(token), StandardCharsets.UTF_8);
+        ret = (JSONObject) new JSONParser().parse(decoded);
         return ret;
     }
 }

@@ -123,7 +123,6 @@ public class PluginConfig {
     static {
         // 各種メッセージ出力クラスを強制的にロードする
         PluginLog.loadConfig();
-        PluginException.loadConfig();
     }
 
     /**
