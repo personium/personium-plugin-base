@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.personium.plugin.base;
 
 /**
  * Exception for Plugins.
  */
-public class PluginException extends RuntimeException {
+public class PluginException extends Exception {
 
     /** Response status code. */
     private int statusCode;

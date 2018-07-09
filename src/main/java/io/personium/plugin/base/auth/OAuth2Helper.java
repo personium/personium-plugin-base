@@ -36,11 +36,10 @@ public final class OAuth2Helper {
      */
     public static final String VERSION = "Draft 27";
 
-
     /**
      * Name space.
      */
-    public static final String NS_DC1 = "urn:x-dc1:xmlns";
+    public static final String NS_PERSONIUM = "urn:x-personium:xmlns";
 
     /**
      * SAML Assertionを表すURN.
@@ -157,6 +156,10 @@ public final class OAuth2Helper {
          * refresh_token.
          */
         public static final String REFRESH_TOKEN = "refresh_token";
+        /**
+         * Grant Type URN for oidc google.
+         */
+        public static final String URN_OIDC_GOOGLE = "urn:x-personium:oidc:google";
 
     }
 
@@ -168,6 +171,8 @@ public final class OAuth2Helper {
          * token.
          */
         public static final String TOKEN = "token";
+        /** code. */
+        public static final String CODE = "code";
     }
 
     /**
@@ -264,15 +269,15 @@ public final class OAuth2Helper {
          */
         public static final String SCOPE = "scope";
         /**
-         * personium_target.
+         * p_target.
          */
-        public static final String TARGET = "dc_target";
+        public static final String TARGET = "p_target";
         /**
-         * personium_owner.
+         * p_owner.
          */
-        public static final String OWNER = "dc_owner";
+        public static final String OWNER = "p_owner";
         /**
-         * personium_owner value.
+         * p_owner value.
          */
         public static final String TRUE_STR = "true";
         /**
@@ -294,17 +299,17 @@ public final class OAuth2Helper {
         /**
          * ownerRepresentativeAccounts.
          */
-        public static final QName PROP_KEY_OWNER_REPRESENTIVE_ACCOUNTS = new QName(NS_DC1,
-                "ownerRepresentativeAccounts");
+        public static final QName PROP_KEY_OWNER_REPRESENTIVE_ACCOUNTS =
+                new QName(NS_PERSONIUM, "ownerRepresentativeAccounts");
         /**
          * ownerRepresentativeAccount.
          */
-        public static final QName PROP_KEY_OWNER_REPRESENTIVE_ACCOUNT = new QName(NS_DC1,
-                "account");
+        public static final QName PROP_KEY_OWNER_REPRESENTIVE_ACCOUNT =
+                new QName(NS_PERSONIUM, "account");
     }
 
     /**
-     * スキーマ認証レベルの値.
+     * Schema Authz Level.
      */
     public static class SchemaLevel {
         /**
@@ -319,6 +324,22 @@ public final class OAuth2Helper {
          * confidential.
          */
         public static final String CONFIDENTIAL = "confidential";
+
+        /**
+         * Check whether it matches permitted value.
+         * Returns true if argument is null or empty.
+         * @param value Target value
+         * @return true:match false:not match
+         */
+        public static boolean isMatchPermittedValue(String value) {
+            if (value == null
+                    || NONE.equals(value)
+                    || PUBLIC.equals(value)
+                    || CONFIDENTIAL.equals(value)) {
+                return true;
+            }
+            return false;
+        }
     }
 
     /**

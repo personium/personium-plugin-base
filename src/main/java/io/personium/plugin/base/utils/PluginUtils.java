@@ -24,12 +24,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -41,17 +39,12 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.personium.plugin.base.PluginException;
-
 /**
  * Pluginを作成する人が使用したいであろう各種ユーティリティ関数を集めたクラス.
  */
 public final class PluginUtils {
 
     static Logger log = LoggerFactory.getLogger(PluginUtils.class);
-
-    private static final String ERROR_MESSAGE_UNEXPECTED_RESPONSE = "Unexpected response from {0}, where {1} expected.";
-    private static final String ERROR_MESSAGE_HTTP_REQUEST_FAILED = "HTTP {0} request to {1} failed. Response code : {2}."; // CHECKSTYLE IGNORE
 
     private PluginUtils() {
     }
@@ -248,40 +241,28 @@ public final class PluginUtils {
      *
      * @param url URL
      * @return JSONObject
-     * @throws PluginException PluginException
+     * @throws IOException IOException
+     * @throws ClientProtocolException ClientProtocolException
+     * @throws ParseException ParseException
      */
-    public static JSONObject getHttpJSON(String url) throws PluginException {
+    public static JSONObject getHttpJSON(String url) throws ClientProtocolException, IOException, ParseException {
         HttpGet get = new HttpGet(url);
         HttpResponse res = null;
         String status = null;
         CloseableHttpClient httpProxyClient = null;
-        try {
-            // Connection Host
-            if (ProxyUtils.isProxyHost()) {
-                httpProxyClient = ProxyUtils.proxyHttpClient();
-                get.setConfig(ProxyUtils.getRequestConfig());
-                res = httpProxyClient.execute(get);
-            } else {
-                res = httpClient.execute(get);
-            }
-
-            InputStream is = res.getEntity().getContent();
-            status = String.valueOf(res.getStatusLine().getStatusCode());
-            String body = PluginUtils.readInputStreamAsString(is);
-            JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
-            return jsonObj;
-        } catch (ClientProtocolException e) {
-            // HTTPのプロトコル違反
-            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    MessageFormat.format(ERROR_MESSAGE_UNEXPECTED_RESPONSE, url, "proper HTTP response"));
-        } catch (IOException e) {
-            // サーバーに接続できない場合に発生
-            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    MessageFormat.format(ERROR_MESSAGE_HTTP_REQUEST_FAILED, HttpGet.METHOD_NAME, url, status));
-        } catch (ParseException e) {
-            // JSONでないものを返してきた
-            throw new PluginException(HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    MessageFormat.format(ERROR_MESSAGE_UNEXPECTED_RESPONSE, url, "JSON"));
+        // Connection Host
+        if (ProxyUtils.isProxyHost()) {
+            httpProxyClient = ProxyUtils.proxyHttpClient();
+            get.setConfig(ProxyUtils.getRequestConfig());
+            res = httpProxyClient.execute(get);
+        } else {
+            res = httpClient.execute(get);
         }
+
+        InputStream is = res.getEntity().getContent();
+        status = String.valueOf(res.getStatusLine().getStatusCode());
+        String body = PluginUtils.readInputStreamAsString(is);
+        JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
+        return jsonObj;
     }
 }
