@@ -18,7 +18,6 @@ package io.personium.plugin.base.auth;
 
 /**
  * Auth Constants.
- *
  */
 public final class AuthConst {
     /** plugin type **/

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.personium.plugin.base.Plugin;
-import io.personium.plugin.base.PluginException;
 
 /**
  * AuthPlugin.
@@ -43,7 +42,7 @@ public interface AuthPlugin extends Plugin {
      * authenticate.
      * @param body map
      * @return PluginResult
-     * @throws PluginException PluginException
+     * @throws AuthPluginException AuthPluginException
      */
-    AuthenticatedIdentity authenticate(Map<String, List<String>> body) throws PluginException;
+    AuthenticatedIdentity authenticate(Map<String, List<String>> body) throws AuthPluginException;
 }
