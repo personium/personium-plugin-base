@@ -248,7 +248,6 @@ public final class PluginUtils {
     public static JSONObject getHttpJSON(String url) throws ClientProtocolException, IOException, ParseException {
         HttpGet get = new HttpGet(url);
         HttpResponse res = null;
-        String status = null;
         CloseableHttpClient httpProxyClient = null;
         // Connection Host
         if (ProxyUtils.isProxyHost()) {
@@ -260,7 +259,6 @@ public final class PluginUtils {
         }
 
         InputStream is = res.getEntity().getContent();
-        status = String.valueOf(res.getStatusLine().getStatusCode());
         String body = PluginUtils.readInputStreamAsString(is);
         JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
         return jsonObj;
