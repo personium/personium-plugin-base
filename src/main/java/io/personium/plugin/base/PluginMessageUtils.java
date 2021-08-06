@@ -77,18 +77,16 @@ public abstract class PluginMessageUtils {
     private static Properties doLoad(String file) {
         Properties prop = new Properties();
         prop.clear();
-        InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream(file);
-        try {
+
+        try (InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream(file)) {
+            if (is == null) {
+                throw new RuntimeException("Property file is not found: " + file);
+            }
             prop.load(is);
         } catch (IOException e) {
             throw new RuntimeException("failed to load config!", e);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                throw new RuntimeException("failed to close config stream", e);
-            }
         }
+
         return prop;
     }
 
