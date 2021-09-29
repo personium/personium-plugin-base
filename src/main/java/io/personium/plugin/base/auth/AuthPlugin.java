@@ -1,6 +1,7 @@
 /**
- * personium.io
- * Copyright 2017 FUJITSU LIMITED
+ * Personium
+ * Copyright 2014-2021 Personium Project Authors
+ * - FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,6 @@ import io.personium.plugin.base.Plugin;
 
 /**
  * AuthPlugin.
- *
  */
 public interface AuthPlugin extends Plugin {
     /**

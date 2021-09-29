@@ -1,6 +1,7 @@
 /**
- * personium.io
- * Copyright 2017 FUJITSU LIMITED
+ * Personium
+ * Copyright 2014-2021 Personium Project Authors
+ * - FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.cache.CachingHttpClient;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -234,7 +235,7 @@ public final class PluginUtils {
      * Cacheを効かせるため、ClientをStaticとする. たかだか限定されたURLのbodyを保存するのみであり、
      * 最大キャッシュサイズはCacheConfigクラスで定義された16kbyte程度である. そのため、Staticで持つこととした.
      */
-    private static HttpClient httpClient = new CachingHttpClient();
+    private static HttpClient httpClient = CachingHttpClientBuilder.create().build();
 
     /**
      * HTTPでJSONオブジェクトを取得する処理. Cacheが利用可能であればその値を用いる.

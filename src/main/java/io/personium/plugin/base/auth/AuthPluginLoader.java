@@ -17,20 +17,15 @@
  */
 package io.personium.plugin.base.auth;
 
+import java.util.List;
+
 /**
- * Auth Constants.
+ * Interface of providing multiple AuthPlugin instance.
  */
-public final class AuthConst {
-    /** plugin type **/
-    /** Auth. **/
-    public static final String PLUGIN_TYPE = "auth";
-
-    /** oidc. **/
-    public static final String KEY_OIDC_TYPE = "oidc";
-
+public interface AuthPluginLoader {
     /**
-     * Can not instantiate.
+     * Instanciate Multiple AuthPlugin.
+     * @return List of AuthPlugin
      */
-    private AuthConst() {
-    }
+    List<AuthPlugin> loadInstances();
 }
