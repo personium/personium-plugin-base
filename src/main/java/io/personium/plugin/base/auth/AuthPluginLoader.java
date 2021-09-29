@@ -17,7 +17,7 @@
  */
 package io.personium.plugin.base.auth;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface of providing multiple AuthPlugin instance.
