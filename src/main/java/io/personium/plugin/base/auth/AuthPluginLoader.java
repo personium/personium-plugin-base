@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public interface AuthPluginLoader {
     /**
      * Instanciate Multiple AuthPlugin.
-     * @return ArrayList of AuthPlugin
+     * @return List of AuthPlugin
      */
     List<AuthPlugin> loadInstances();
 }
