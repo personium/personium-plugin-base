@@ -27,5 +27,5 @@ public interface AuthPluginLoader {
      * Instanciate Multiple AuthPlugin.
      * @return ArrayList of AuthPlugin
      */
-    ArrayList<AuthPlugin> loadInstances();
+    List<AuthPlugin> loadInstances();
 }
