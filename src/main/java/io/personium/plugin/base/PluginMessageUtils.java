@@ -1,6 +1,7 @@
 /**
- * personium.io
- * Copyright 2017 FUJITSU LIMITED
+ * Personium
+ * Copyright 2014-2021 Personium Project Authors
+ * - FUJITSU LIMITED
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,18 +78,16 @@ public abstract class PluginMessageUtils {
     private static Properties doLoad(String file) {
         Properties prop = new Properties();
         prop.clear();
-        InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream(file);
-        try {
+
+        try (InputStream is = PluginConfig.class.getClassLoader().getResourceAsStream(file)) {
+            if (is == null) {
+                throw new RuntimeException("Property file is not found: " + file);
+            }
             prop.load(is);
         } catch (IOException e) {
             throw new RuntimeException("failed to load config!", e);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                throw new RuntimeException("failed to close config stream", e);
-            }
         }
+
         return prop;
     }
 
