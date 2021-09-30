@@ -230,7 +230,7 @@
         <repository>
             <id>personium.io</id>
             <name>Personium Repository</name>
-            <url>http://personium.io/mvnrepo</url>
+            <url>https://personium.io/mvnrepo</url>
         </repository>
     </distributionManagement>
     <dependencies>
