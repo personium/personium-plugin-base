@@ -4,6 +4,9 @@
     <artifactId>personium-plugin-base</artifactId>
     <packaging>jar</packaging>
     <version>1.0.9-SNAPSHOT</version>
+    <name>personium-plugin-base</name>
+    <description>A base module which serves basic functions to Personium plugin modules.</description>
+    <url>https://github.com/personium/personium-plugin-base</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -11,6 +14,50 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <name>Akio Shimono</name>
+            <email>shimono.akio@fujitsu.com</email>
+            <organization>Fujitsu Limited</organization>
+            <organizationUrl>https://www.fujitsu.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Dixon Siu</name>
+            <email>siu.dixon@fujitsu.com</email>
+            <organization>Fujitsu Limited</organization>
+            <organizationUrl>https://www.fujitsu.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Yasufumi Tochiori</name>
+            <email>tochiori.y@fujitsu.com</email>
+            <organization>Fujitsu Limited</organization>
+            <organizationUrl>https://www.fujitsu.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Yo Ishiguro</name>
+            <email>ishiguro.yo@fujitsu.com</email>
+            <organization>Fujitsu Limited</organization>
+            <organizationUrl>https://www.fujitsu.com/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/personium/personium-plugin-base.git</connection>
+        <developerConnection>scm:git:ssh://github.com:personium/personium-plugin-base.git</developerConnection>
+        <url>http://github.com/personium/personium-plugin-base/tree/master</url>
+    </scm>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -27,6 +74,15 @@
             <url>https://repo1.maven.org/maven2</url>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <name>Nexus Snapshots Repository</name>
+            <layout>default</layout>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -110,7 +166,6 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
-                    <header>../copyright.txt</header>
                     <excludes>
                         <exclude>.checkstyle</exclude>
                         <exclude>checkstyle.header</exclude>
@@ -145,6 +200,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -215,13 +281,6 @@
             </plugin>
         </plugins>
     </reporting>
-    <distributionManagement>
-        <repository>
-            <id>personium.io</id>
-            <name>Personium Repository</name>
-            <url>https://personium.io/mvnrepo</url>
-        </repository>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -291,4 +350,59 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
